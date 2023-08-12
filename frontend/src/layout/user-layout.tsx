@@ -17,15 +17,21 @@ const userButtons: NavbarCategory[] = [
   {
     buttons: [
       {
-        text: "Użytkownicy",
+        text: "Podgląd",
         to: "#",
         index: 1,
         active: true,
       },
       {
-        text: "Ustawienia",
+        text: "Użytkownicy",
         to: "#",
         index: 2,
+        active: false,
+      },
+      {
+        text: "Ustawienia",
+        to: "#",
+        index: 3,
         active: false,
       },
     ],

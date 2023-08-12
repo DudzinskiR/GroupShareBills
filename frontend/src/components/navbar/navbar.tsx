@@ -43,7 +43,7 @@ const Navbar = ({ category }: props) => {
           return (
             <div key={categoryIndex} className="flex flex-row">
               {categoryIndex !== 0 && (
-                <div className="h-full flex items-center mx-5">
+                <div className="h-full flex items-center mx-1">
                   <div className="h-2/4 border "></div>
                 </div>
               )}
@@ -61,7 +61,7 @@ const Navbar = ({ category }: props) => {
     <nav className="lg:h-[70px] h-[50px] border-b shadow bg-slate-950 lg:bg-white duration-150 fixed w-full">
       <div className="h-full flex flex-row lg:justify-between justify-center max-w-[1280px] items-center m-auto">
         <div className="flex flex-row h-full">
-          <button className="flex justify-center items-center w-[200px] h-full md:text-xl text-lg font-poppins text-white lg:text-slate-950 duration-150">
+          <button className="flex justify-center items-center w-[175px] h-full md:text-xl text-lg font-poppins text-white lg:text-slate-950 duration-150">
             GroupShareBills
           </button>
           <div className="hidden lg:block">{renderButtonsList()}</div>
