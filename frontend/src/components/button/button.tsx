@@ -29,7 +29,11 @@ const Button = ({
       className={`
       ${className} 
       ${color || Color.BLUE}
-      ${enabled ? "cursor-pointer" : "saturate-0 cursor-default"}
+      ${
+        enabled
+          ? "cursor-pointer hover:saturate-[1.5] duration-100"
+          : "saturate-0 cursor-default"
+      }
       flex justify-center items-center rounded-lg shadow-md text-white font-semibold select-none p-2
       `}
       onClick={() => {
