@@ -135,7 +135,7 @@ const UserMenu = ({ category }: props) => {
         <div className="hidden lg:block absolute" ref={menuSmallRef}>
           {renderSmallMenu()}
         </div>
-        <div className="block lg:hidden absolute translate-x-[-50%] left-[50%] top-[55px]">
+        <div className="block lg:hidden absolute translate-x-[-50%] left-[50%] top-[55px] z-[9999]">
           {renderBigMenu()}
         </div>
       </>
@@ -184,7 +184,6 @@ const UserMenu = ({ category }: props) => {
       >
         <GiHamburgerMenu />
       </div>
-
       {isOpen && renderMenu()}
     </>
   );

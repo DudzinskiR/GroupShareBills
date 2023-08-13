@@ -58,7 +58,7 @@ const Navbar = ({ category }: props) => {
   };
 
   return (
-    <nav className="lg:h-[70px] h-[50px] border-b shadow bg-slate-950 lg:bg-white duration-150 fixed w-full">
+    <nav className="lg:h-[70px] h-[50px] border-b shadow bg-slate-950 lg:bg-white duration-150 w-full fixed z-50">
       <div className="h-full flex flex-row lg:justify-between justify-center max-w-[1280px] items-center m-auto">
         <div className="flex flex-row h-full">
           <button className="flex justify-center items-center w-[175px] h-full md:text-xl text-lg font-poppins text-white lg:text-slate-950 duration-150">
