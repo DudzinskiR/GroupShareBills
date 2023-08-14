@@ -1,11 +1,11 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Home from "../pages/user/home/home";
+import BillPage from "../pages/user/bill/bill-page";
 
 const UserRoutes = () => {
   return (
     <Routes>
-      <Route index element={<Home />}></Route>
+      <Route index element={<BillPage />}></Route>
     </Routes>
   );
 };
