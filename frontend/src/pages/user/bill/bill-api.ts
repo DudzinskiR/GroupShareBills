@@ -22,6 +22,7 @@ class BillApi extends Api {
     };
 
     const random = Math.floor(Math.random() * 3);
+
     // const random = 1;
     if (random === 1) {
       const userNumber = Math.floor(Math.random() * 8 + 2);
@@ -32,7 +33,7 @@ class BillApi extends Api {
         data.balance += temp;
         data.users.push({
           name: names[Math.floor(Math.random() * names.length)],
-          id: "1",
+          id: `${i}`,
           balance: temp,
         });
       }
@@ -44,7 +45,7 @@ class BillApi extends Api {
         data.balance += temp;
         data.users.push({
           name: names[Math.floor(Math.random() * names.length)],
-          id: "1",
+          id: `${i}`,
           balance: temp,
         });
       }

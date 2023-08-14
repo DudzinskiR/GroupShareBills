@@ -27,13 +27,12 @@ const compareValueData = (a: valueData, b: valueData) => {
 };
 
 const chartColors = [
-  "bg-gradient-to-r from-sky-500 to-indigo-600",
-  "bg-gradient-to-r from-lime-500 to-lime-600",
+  "bg-gradient-to-t from-lime-500 to-green-600",
+  "bg-gradient-to-t from-sky-500 to-indigo-600",
   // "bg-gradient-to-r from-indigo-500 to-indigo-600",
-  "bg-gradient-to-r from-yellow-300 to-yellow-400",
-  "bg-gradient-to-r from-orange-400 to-orange-500",
-  "bg-gradient-to-r from-green-500 to-green-600",
-  "bg-gradient-to-r from-violet-600 to-violet-700",
+  "bg-gradient-to-t from-yellow-300 to-yellow-400",
+  "bg-gradient-to-t from-orange-400 to-orange-500",
+  "bg-gradient-to-t from-violet-600 to-violet-700",
 ];
 
 const pointCoordinates = [
@@ -74,7 +73,18 @@ const PieChart = ({
       0,
     );
 
-    if (sum === 0) return;
+    if (sum === 0) {
+      let newValueData: valueData[] = [];
+
+      newValueData.push({
+        value: 0,
+        label: ``,
+        percentage: 360,
+      });
+
+      setValueData(newValueData);
+      return;
+    }
 
     let newValueData: valueData[] = [];
 
@@ -117,6 +127,14 @@ const PieChart = ({
       }
     }
 
+    if (newValueData.length === 0) {
+      newValueData.push({
+        value: 0,
+        label: ``,
+        percentage: 360,
+      });
+    }
+
     setValueData(newValueData);
   }, [data, maxNumber, minValue]);
 
@@ -155,7 +173,6 @@ const PieChart = ({
               width: `${size * 1.05}px`,
             }}
           >
-            {/* <div className="absolute left-[-30px] text-black text-xl">sss</div> */}
             <div
               className={`rounded-full hover:saturate-[2] border ${
                 chartColors[index % chartColors.length]
@@ -188,30 +205,31 @@ const PieChart = ({
           left += (left * 2 - size / 2) * 0.1 - 60;
 
           const temp = currentLabelAngle + halfAngle;
-          console.log(
-            "🚀 ~ file: pie-chart.tsx:191 ~ {valueData.map ~ temp:",
-            temp,
-          );
-
-          return (
-            <div
-              key={index}
-              className="absolute select-none font-bold truncate text-center"
-              style={{
-                top: `${top}px`,
-                left: `${left}px`,
-                transform: `rotate(${temp}deg) ${
-                  Math.abs(temp) > 90 && Math.abs(temp) < 270 ? `scale(-1)` : ""
-                }`,
-              }}
-            >
-              <div className="w-[150px] truncate">{item.label}</div>
-              <div className="w-full flex justify-center">
-                <div className="w-2/4 border"></div>
+          if (item.label) {
+            return (
+              <div
+                key={index}
+                className="absolute select-none font-bold truncate text-center"
+                style={{
+                  top: `${top}px`,
+                  left: `${left}px`,
+                  transform: `rotate(${temp}deg) ${
+                    Math.abs(temp) > 90 && Math.abs(temp) < 270
+                      ? `scale(-1)`
+                      : ""
+                  }`,
+                }}
+              >
+                <div className="w-[150px] truncate">{item.label}</div>
+                <div className="w-full flex justify-center">
+                  <div className="w-2/4 border"></div>
+                </div>
+                <div>{shortenNumber(Math.abs(item.value))} zł</div>
               </div>
-              <div>{shortenNumber(item.value)} zł</div>
-            </div>
-          );
+            );
+          } else {
+            return <div key={index}></div>;
+          }
         })}
       </div>
 
