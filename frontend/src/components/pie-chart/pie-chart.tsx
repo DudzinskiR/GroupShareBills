@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { couldStartTrivia } from "typescript";
-
+import shortenNumber from "../../utils/shortenNumber";
 interface props {
   data: PieChartData[];
   maxNumber?: number;
   size?: number;
   minValue?: number;
+  currency?: string;
+  sum?: number;
 }
 
 export interface PieChartData {
@@ -26,9 +27,9 @@ const compareValueData = (a: valueData, b: valueData) => {
 };
 
 const chartColors = [
-  "bg-gradient-to-r from-sky-500 to-indigo-500",
+  "bg-gradient-to-r from-sky-500 to-indigo-600",
   "bg-gradient-to-r from-lime-500 to-lime-600",
-  "bg-gradient-to-r from-indigo-500 to-indigo-600",
+  // "bg-gradient-to-r from-indigo-500 to-indigo-600",
   "bg-gradient-to-r from-yellow-300 to-yellow-400",
   "bg-gradient-to-r from-orange-400 to-orange-500",
   "bg-gradient-to-r from-green-500 to-green-600",
@@ -47,14 +48,25 @@ const pointCoordinates = [
 
 const PieChart = ({
   data,
-  maxNumber = 5,
+  maxNumber = 6,
   size = 220,
   minValue = 0.1,
+  sum,
 }: props) => {
   const [valueData, setValueData] = useState<valueData[]>([]);
 
   let currentAngle = 0;
   let currentLabelAngle = 0;
+
+  const renderDescription = () => {
+    if (sum === 0) {
+      return "Wszystko w porządku";
+    } else if (sum! > 0) {
+      return "Otrzymasz jeszcze";
+    } else {
+      return "Do oddania";
+    }
+  };
 
   useEffect(() => {
     const sum = data.reduce(
@@ -80,12 +92,12 @@ const PieChart = ({
       .slice(maxNumber - 1)
       .reduce((sum, data) => sum + data.value, 0);
 
-    if (newValueData.length > 4) {
+    if (newValueData.length > maxNumber) {
       newValueData = [
-        ...newValueData.slice(0, 4),
+        ...newValueData.slice(0, maxNumber - 1),
         {
           value: sumOtherValues,
-          label: "Inni",
+          label: `Inni (${newValueData.length - maxNumber + 1})`,
           percentage: sumOtherValues / sum,
         },
       ];
@@ -105,10 +117,7 @@ const PieChart = ({
       }
     }
 
-    console.log(additionalPercentage);
-
     setValueData(newValueData);
-    console.log(newValueData);
   }, [data, maxNumber, minValue]);
 
   return (
@@ -138,7 +147,7 @@ const PieChart = ({
         return (
           <div
             key={index}
-            className={`flex justify-center items-center absolute`}
+            className={`flex justify-center items-center absolute duration-0`}
             style={{
               clipPath: polygon,
               transform: `rotate(${currentAngle}deg)`,
@@ -146,8 +155,9 @@ const PieChart = ({
               width: `${size * 1.05}px`,
             }}
           >
+            {/* <div className="absolute left-[-30px] text-black text-xl">sss</div> */}
             <div
-              className={`rounded-full hover:saturate-[2] duration-150 ${
+              className={`rounded-full hover:saturate-[2] border ${
                 chartColors[index % chartColors.length]
               }`}
               style={{
@@ -172,21 +182,34 @@ const PieChart = ({
           );
 
           let top = size + (cos * size) / 2 - size / 2;
-          top += (top * 2 - size / 2) * 0.1;
+          top += (top * 2 - size / 2) * 0.1 - 25;
 
           let left = (sin * size) / 2;
-          left += (left * 2 - size / 2) * 0.1;
+          left += (left * 2 - size / 2) * 0.1 - 60;
+
+          const temp = currentLabelAngle + halfAngle;
+          console.log(
+            "🚀 ~ file: pie-chart.tsx:191 ~ {valueData.map ~ temp:",
+            temp,
+          );
 
           return (
             <div
               key={index}
-              className="absolute select-none font-bold text-lg w-[75px] truncate"
+              className="absolute select-none font-bold truncate text-center"
               style={{
                 top: `${top}px`,
                 left: `${left}px`,
+                transform: `rotate(${temp}deg) ${
+                  Math.abs(temp) > 90 && Math.abs(temp) < 270 ? `scale(-1)` : ""
+                }`,
               }}
             >
-              {item.label}
+              <div className="w-[150px] truncate">{item.label}</div>
+              <div className="w-full flex justify-center">
+                <div className="w-2/4 border"></div>
+              </div>
+              <div>{shortenNumber(item.value)} zł</div>
             </div>
           );
         })}
@@ -200,15 +223,23 @@ const PieChart = ({
         }}
       >
         <div
-          className="bg-red-600 rounded-full"
+          className={`bg-gradient-to-b ${
+            sum! < 0 ? "from-red-600 to-red-800" : "from-green-600 to-green-800"
+          } rounded-full shadow hover:saturate-[1.1]`}
           style={{
             height: `${size * 0.6}px`,
             width: `${size * 0.6}px`,
           }}
         >
           <div className="flex justify-center items-center h-full flex-col">
-            <div className="text-white font-bold text-lg">Do oddania</div>
-            <div className="text-white font-bold text-3xl">550zł</div>
+            <div className="text-white font-bold sm:text-base text-sm text-center">
+              {renderDescription()}
+            </div>
+            {sum !== 0 && (
+              <div className="text-white font-bold sm:text-3xl text-xl">
+                {shortenNumber(Math.round(Math.abs(sum!) || 0))} zł
+              </div>
+            )}
           </div>
         </div>
       </div>
