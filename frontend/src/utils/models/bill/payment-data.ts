@@ -1,7 +1,13 @@
 export interface PaymentData {
   description: string;
   value: number;
-  data: string;
+  date: Date;
+  creatorID: string;
+  usersID: string[];
+  id: string;
 }
 
-export interface PaymentUserData {}
+export interface PaymentHistoryData {
+  date: Date;
+  payment: PaymentData[];
+}

@@ -14,7 +14,9 @@ interface props {
   color?: Color;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
+  centerIcon?: ReactNode;
   enabled?: boolean;
+  rounded?: boolean;
 }
 
 const Button = ({
@@ -23,7 +25,9 @@ const Button = ({
   color,
   text,
   leftIcon,
+  centerIcon,
   rightIcon,
+  rounded,
   enabled = true,
 }: props) => {
   return (
@@ -36,14 +40,18 @@ const Button = ({
           ? "cursor-pointer hover:saturate-[1.5] duration-100"
           : "saturate-0 cursor-default"
       }
-      flex justify-center items-center rounded-lg shadow-md text-white font-semibold select-none p-2
+      ${rounded ? "rounded-full" : "rounded-lg"}
+      flex justify-center items-center shadow-md text-white font-semibold select-none p-2
       `}
       onClick={() => {
         if (onClick) onClick();
       }}
     >
       {leftIcon && <div className="text-2xl">{leftIcon}</div>}
-      <div className="px-2">{text}</div>
+      <div className="px-2">
+        {text}
+        {centerIcon}
+      </div>
       {rightIcon && <div className="text-2xl">{rightIcon}</div>}
     </button>
   );

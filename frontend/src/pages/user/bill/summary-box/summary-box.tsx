@@ -27,7 +27,7 @@ const SummaryBox = () => {
     for (const item of billBalanceData.users) {
       pieData.push({
         value: item.balance,
-        label: item.name,
+        label: item.id,
       });
     }
 
@@ -51,7 +51,7 @@ const SummaryBox = () => {
     if (width > 426) {
       setChartSize(250);
     } else {
-      setChartSize(175);
+      setChartSize(150);
     }
   }, [width]);
 
@@ -65,7 +65,7 @@ const SummaryBox = () => {
         key={index}
         className="flex md:flex-row flex-col w-full items-center gap-3 justify-between"
       >
-        <div className="flex flex-row bg-slate-100 w-full rounded-xl h-full items-center justify-between font-montserrat shadow-sm">
+        <div className="flex flex-row bg-slate-100 w-full rounded-xl h-full items-center justify-between font-montserrat shadow">
           <div className="text-xl w-[200px] ml-3 truncate p-2">
             <Username id={userID} />
           </div>

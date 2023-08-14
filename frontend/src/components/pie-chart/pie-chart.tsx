@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import shortenNumber from "../../utils/shortenNumber";
+import Username from "../username/username";
 interface props {
   data: PieChartData[];
   maxNumber?: number;
@@ -220,7 +221,13 @@ const PieChart = ({
                   }`,
                 }}
               >
-                <div className="w-[150px] truncate">{item.label}</div>
+                <div className="w-[150px] truncate">
+                  {item.label.slice(0, 4) === "Inni" ? (
+                    item.label
+                  ) : (
+                    <Username id={item.label} />
+                  )}
+                </div>
                 <div className="w-full flex justify-center">
                   <div className="w-2/4 border"></div>
                 </div>

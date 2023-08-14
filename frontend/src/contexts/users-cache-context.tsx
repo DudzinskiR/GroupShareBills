@@ -16,19 +16,17 @@ export const UsersCacheContext = createContext<UsersCacheType | undefined>(
 const UsersCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
   const [cache, setCache] = useState<{ [key: string]: string }>({});
 
+  const fetchedData: { [key: string]: boolean } = {};
+
   const getUser = async (id: string) => {
-    if (cache[id]) {
+    if (cache[id] || fetchedData[id]) {
       return cache[id];
     } else {
       setCache((prevCache) => ({ ...prevCache, [id]: "Ładowanie" }));
-
+      fetchedData[id] = true;
       const data = await UsersApi.getUser(id);
-      console.log(
-        "🚀 ~ file: users-cache-context.tsx:26 ~ getUser ~ data:",
-        data,
-      );
-      setCache((prevCache) => ({ ...prevCache, [id]: data }));
 
+      setCache((prevCache) => ({ ...prevCache, [id]: data }));
       return cache[id];
     }
   };
