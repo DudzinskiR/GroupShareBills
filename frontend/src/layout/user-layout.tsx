@@ -40,12 +40,12 @@ const userButtons: NavbarCategory[] = [
 
 const UserLayout = () => {
   return (
-    <div className="relative">
+    <div className="relative flex justify-center">
       <div className="absolute w-full">
         <Navbar category={userButtons} />
       </div>
       {/* <Sidebar /> */}
-      <div className="lg:pt-[70px] pt-[50px]">
+      <div className="lg:pt-[70px] pt-[50px] w-max-[1280px] w-[1280px]">
         <UserRoute />
       </div>
     </div>
