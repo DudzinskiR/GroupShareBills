@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Box from "../../../../components/box/box";
 import PaymentButton from "./payment-button";
-import BillApi from "../bill-api";
+import BillApi from "../../../../utils/api/bill/bill-api";
 import { PaymentHistoryData } from "../../../../utils/models/bill/payment-data";
 import DateFormatter from "../../../../utils/other/date-formatter";
 import InputText from "../../../../components/input-text/input-text";

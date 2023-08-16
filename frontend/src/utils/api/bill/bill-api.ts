@@ -1,11 +1,34 @@
-import Api from "../../../utils/api/api";
-import { BillBalance } from "../../../utils/models/bill/bill-balance";
+import Api from "../api";
+import { BillBalance } from "../../models/bill/bill-balance";
 import {
   PaymentData,
   PaymentHistoryData,
-} from "../../../utils/models/bill/payment-data";
+} from "../../models/bill/payment-data";
+import BillData from "../../models/bill/bill-data";
 
 class BillApi extends Api {
+  static async getBillList(): Promise<BillData[]> {
+    await new Promise((r) => setTimeout(r, 500));
+
+    const result: BillData[] = [];
+    const billName = [
+      "Wycieczka do zakopanego",
+      "Wycieczka nad morze",
+      "Impreza na Piotrkowskiej",
+      "Zwykły rachunek",
+      "Bardzo długa nazwa sprawdzająca czy tekst się dobrze wyświetla",
+    ];
+
+    for (let i = 0; i < Math.floor(Math.random() * 5 + 2); i++) {
+      result.push({
+        name: billName[Math.floor(Math.random() * billName.length)],
+        userNumber: Math.floor(Math.random() * 5 + 2),
+        id: `${i}`,
+      });
+    }
+    return result;
+  }
+
   static async getBillHistory(id: string): Promise<PaymentHistoryData[]> {
     const paymentHistory: PaymentHistoryData[] = [];
     const descriptionType = [

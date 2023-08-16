@@ -2,6 +2,7 @@ import React from "react";
 import Button from "../button/button";
 import { BiPlusCircle } from "react-icons/bi";
 import UserMenu from "./user-menu/user-menu";
+import { useNavigate } from "react-router-dom";
 
 interface props {
   category?: NavbarCategory[];
@@ -19,6 +20,8 @@ export interface NavbarButton {
 }
 
 const Navbar = ({ category }: props) => {
+  const navigate = useNavigate();
+
   const renderButton = (item: NavbarButton, index: number) => {
     return (
       <div
@@ -61,7 +64,10 @@ const Navbar = ({ category }: props) => {
     <nav className="lg:h-[70px] h-[50px] border-b shadow bg-slate-950 lg:bg-white duration-150 w-full fixed z-50">
       <div className="h-full flex flex-row lg:justify-between justify-center max-w-[1280px] items-center m-auto">
         <div className="flex flex-row h-full">
-          <button className="flex justify-center items-center w-[175px] h-full md:text-xl text-lg font-poppins text-white lg:text-slate-950 duration-150">
+          <button
+            className="flex justify-center items-center w-[175px] h-full md:text-xl text-lg font-poppins text-white lg:text-slate-950 duration-150"
+            onClick={() => navigate("/")}
+          >
             GroupShareBills
           </button>
           <div className="hidden lg:block">{renderButtonsList()}</div>

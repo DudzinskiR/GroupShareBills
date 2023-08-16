@@ -8,7 +8,7 @@ import PieChart, {
 import useWindowDimensions from "../../../../hooks/useWindowDimensions";
 import { BillBalance } from "../../../../utils/models/bill/bill-balance";
 import shortenNumber from "../../../../utils/other/shortenNumber";
-import BillApi from "../bill-api";
+import BillApi from "../../../../utils/api/bill/bill-api";
 import Username from "../../../../components/username/username";
 import { BillsCacheContext } from "../../../../contexts/bills-cache-context";
 

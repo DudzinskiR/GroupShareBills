@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useContext, useState } from "react";
-import BillApi from "../pages/user/bill/bill-api";
+import BillApi from "../utils/api/bill/bill-api";
 import { UserData } from "../utils/models/user/user-data";
 import { UsersCacheContext } from "./users-cache-context";
 interface BillsCacheType {
