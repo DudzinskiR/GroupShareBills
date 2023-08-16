@@ -16,5 +16,5 @@ module.exports = {
       montserrat: ["Montserrat"],
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/forms")],
 };

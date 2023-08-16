@@ -8,7 +8,7 @@ export enum Color {
 }
 
 interface props {
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   text?: string;
   className?: string;
   color?: Color;
@@ -43,8 +43,8 @@ const Button = ({
       ${rounded ? "rounded-full" : "rounded-lg"}
       flex justify-center items-center shadow-md text-white font-semibold select-none p-2
       `}
-      onClick={() => {
-        if (onClick) onClick();
+      onClick={(e) => {
+        if (onClick) onClick(e);
       }}
     >
       {leftIcon && <div className="text-2xl">{leftIcon}</div>}

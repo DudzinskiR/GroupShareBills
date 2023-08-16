@@ -8,7 +8,6 @@ import {
 class BillApi extends Api {
   static async getBillHistory(id: string): Promise<PaymentHistoryData[]> {
     const paymentHistory: PaymentHistoryData[] = [];
-
     const descriptionType = [
       "Jedzonko",
       "Uber",
@@ -22,29 +21,27 @@ class BillApi extends Api {
       "Najwidoczniej żeby wszystko sprawdzić muszę zrobić jeszcze dłuższą nazwę płatności. Nie wiem co tu mogę jeszcze napisać, to tylko napiszę że Izrael bezprawnie okupuje tereny należące do Palestyny ale opinia publiczna ma to w dupie i przyzwala na czystki etniczne",
     ];
 
-    for (let i = 0; i < Math.floor(Math.random() * 5 + 2); i++) {
+    for (let i = 0; i < Math.floor(Math.random() * 5 + 5); i++) {
       const newDate = new Date();
       newDate.setDate(newDate.getDate() - i);
 
       const newPaymentList: PaymentData[] = [];
 
-      for (let j = 0; j < Math.floor(Math.random() * 5 + 2); j++) {
+      for (let j = 0; j < Math.floor(Math.random() * 5 + 5); j++) {
         const newUsersID = [];
-        for (let k = 0; k < Math.floor(Math.random() * 5 + 2); k++) {
+        for (let k = 0; k < Math.floor(Math.random() * 5 + 5); k++) {
           newUsersID.push(`${k}`);
         }
-
         newPaymentList.push({
           description:
             descriptionType[Math.floor(Math.random() * descriptionType.length)],
           value: Math.floor(Math.random() * 10000 + 500) / 100,
           date: newDate,
-          creatorID: `${Math.floor(Math.random() * 10)}`,
+          creatorID: `${Math.floor(Math.random() * 3)}`,
           usersID: newUsersID,
           id: `${Math.random()}`,
         });
       }
-
       paymentHistory.push({
         date: newDate,
         payment: newPaymentList,
@@ -53,7 +50,6 @@ class BillApi extends Api {
 
     return paymentHistory;
   }
-
   static async getBillBalance(id: string): Promise<BillBalance> {
     await new Promise((r) => setTimeout(r, 500));
 
@@ -104,6 +100,15 @@ class BillApi extends Api {
     }
 
     return data;
+  }
+
+  static async getUsersInBill(id: string): Promise<string[]> {
+    const newList: string[] = [];
+
+    for (let i = 0; i < Math.floor(Math.random() * 10 + 3); i++) {
+      newList.push(`${i}`);
+    }
+    return newList;
   }
 }
 

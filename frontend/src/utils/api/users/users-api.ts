@@ -13,7 +13,6 @@ class UsersApi extends Api {
       "Mateusz",
       "Ola",
     ];
-
     return `${names[Math.floor(Math.random() * names.length)]} - ${id}`;
   }
 }

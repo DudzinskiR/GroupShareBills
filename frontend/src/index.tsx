@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import { UserContextProvider } from "./contexts/user-context";
 import UsersCacheProvider from "./contexts/users-cache-context";
+import BillsCacheProvider from "./contexts/bills-cache-context";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -13,11 +14,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <UserContextProvider>
-        <UsersCacheProvider>
-          <App />
-        </UsersCacheProvider>
-      </UserContextProvider>
+      <UsersCacheProvider>
+        <UserContextProvider>
+          <BillsCacheProvider>
+            <App />
+          </BillsCacheProvider>
+        </UserContextProvider>
+      </UsersCacheProvider>
     </BrowserRouter>
   </React.StrictMode>,
 );
