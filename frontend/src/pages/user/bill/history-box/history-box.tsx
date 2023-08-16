@@ -13,6 +13,7 @@ import { BillsCacheContext } from "../../../../contexts/bills-cache-context";
 import { UserData } from "../../../../utils/models/user/user-data";
 import { Color } from "../../../../components/button/button";
 import deepCopy from "../../../../utils/other/deep-copy";
+import { useParams } from "react-router-dom";
 const HistoryBox = () => {
   const [paymentHistory, setPaymentHistory] = useState<PaymentHistoryData[]>(
     [],
@@ -38,6 +39,7 @@ const HistoryBox = () => {
 
   const [currency, setCurrency] = useState("");
   const { getUsersInBill, getCurrencyInBill } = useContext(BillsCacheContext)!;
+  const { id } = useParams();
 
   const renderDateSeparator = (date: Date) => {
     return (
@@ -226,19 +228,19 @@ const HistoryBox = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const data = await getUsersInBill("1");
+      const data = await getUsersInBill(id!);
 
       if (data) setUsersList([...data]);
     };
     fetchUsers();
-  }, [getCurrencyInBill, getUsersInBill]);
+  }, [getCurrencyInBill, getUsersInBill, id]);
 
   useEffect(() => {
     const fetchData = async () => {
-      setCurrency(await getCurrencyInBill("1"));
+      setCurrency(await getCurrencyInBill(id!));
     };
     fetchData();
-  }, [getCurrencyInBill]);
+  }, [getCurrencyInBill, id]);
 
   useEffect(() => {
     if (!usersList) return;
@@ -259,14 +261,14 @@ const HistoryBox = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await BillApi.getBillHistory("1");
+      const data = await BillApi.getBillHistory(id!);
 
       if (data) setPaymentHistory([...data]);
     };
 
     fetchData();
     // setCu
-  }, []);
+  }, [id]);
 
   return (
     <div className="w-full">

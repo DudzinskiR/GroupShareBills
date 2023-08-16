@@ -11,6 +11,7 @@ import shortenNumber from "../../../../utils/other/shortenNumber";
 import BillApi from "../../../../utils/api/bill/bill-api";
 import Username from "../../../../components/username/username";
 import { BillsCacheContext } from "../../../../contexts/bills-cache-context";
+import { useParams } from "react-router-dom";
 
 const SummaryBox = () => {
   const [chartSize, setChartSize] = useState(0);
@@ -20,7 +21,7 @@ const SummaryBox = () => {
   const [showNumber, setShowNumber] = useState(5);
   const { width } = useWindowDimensions();
   const [currency, setCurrency] = useState("");
-
+  const { id } = useParams();
   const { getCurrencyInBill } = useContext(BillsCacheContext)!;
 
   useEffect(() => {
@@ -41,7 +42,7 @@ const SummaryBox = () => {
   useEffect(() => {
     const fetchBillBalance = async () => {
       try {
-        const data = await BillApi.getBillBalance("1");
+        const data = await BillApi.getBillBalance(id!);
         data.users.sort((a, b) => Math.abs(b.balance) - Math.abs(a.balance));
         setBillBalanceData(data);
       } catch (e) {}
@@ -49,15 +50,15 @@ const SummaryBox = () => {
 
     fetchBillBalance();
     setShowNumber(5);
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     const fetchCurrency = async () => {
-      setCurrency(await getCurrencyInBill("1"));
+      setCurrency(await getCurrencyInBill(id!));
     };
 
     fetchCurrency();
-  }, [getCurrencyInBill]);
+  }, [getCurrencyInBill, id]);
 
   useEffect(() => {
     if (width > 426) {
