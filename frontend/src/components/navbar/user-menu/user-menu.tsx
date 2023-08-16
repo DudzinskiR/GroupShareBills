@@ -12,9 +12,10 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { BiPlusCircle } from "react-icons/bi";
 
-import { UserContext } from "../../../contexts/user-context";
 import Button, { Color } from "../../button/button";
 import { NavbarButton, NavbarCategory } from "../navbar";
+import { UserCacheContext } from "../../../contexts/user-context";
+import Username from "../../username/username";
 
 interface props {
   category?: NavbarCategory[];
@@ -22,13 +23,22 @@ interface props {
 
 const UserMenu = ({ category }: props) => {
   const [isOpen, setOpen] = useState(false);
-  const userContext = useContext(UserContext);
+  const { getUserID } = useContext(UserCacheContext)!;
   const menuSmallRef = useRef(null);
   const menuBigRef = useRef(null);
+  const [username, setUsername] = useState("");
 
   const logout = () => {
     console.log("Wylogowanie");
   };
+
+  useEffect(() => {
+    const fetchUsername = async () => {
+      setUsername(await getUserID());
+    };
+
+    fetchUsername();
+  }, [getUserID]);
 
   const renderSmallMenuButton = (
     text?: string,
@@ -86,7 +96,9 @@ const UserMenu = ({ category }: props) => {
                 <AiOutlineUser />
               </div>
               <div className={`text-sm ml-3 truncate w-[175px]`}>
-                <div className="truncate">{userContext.username}</div>
+                <div className="truncate">
+                  <Username id={username} />
+                </div>
               </div>
             </div>
             <div className="mr-5">
@@ -172,7 +184,7 @@ const UserMenu = ({ category }: props) => {
             <AiOutlineUser />
           </div>
           <div className="text-gray-600 text-sm w-[180px] truncate pl-2">
-            {userContext.username}
+            <Username id={username} />
           </div>
           <MdOutlineKeyboardArrowDown />
         </div>

@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
-import { UserContextProvider } from "./contexts/user-context";
+import UserCacheProvider from "./contexts/user-context";
 import UsersCacheProvider from "./contexts/users-cache-context";
 import BillsCacheProvider from "./contexts/bills-cache-context";
 
@@ -15,11 +15,11 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <UsersCacheProvider>
-        <UserContextProvider>
+        <UserCacheProvider>
           <BillsCacheProvider>
             <App />
           </BillsCacheProvider>
-        </UserContextProvider>
+        </UserCacheProvider>
       </UsersCacheProvider>
     </BrowserRouter>
   </React.StrictMode>,
