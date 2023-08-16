@@ -47,11 +47,13 @@ const UserMenu = ({ category }: props) => {
   ) => {
     return (
       <div
-        className="h-[30px] flex items-center flex-row gap-2 text-md bg-white hover:bg-slate-100 px-2 py-5 duration-150 cursor-pointer"
+        className="h-[30px] flex items-center flex-row gap-2 text-md bg-slate-700  rounded-lg hover:bg-slate-600  px-2 py-5 duration-150 cursor-pointer"
         onClick={onClick}
       >
-        <div className="text-xl text-gray-600">{icon}</div>
-        <div>{text}</div>
+        <div className="text-xl text-white">{icon}</div>
+        <div className="text-white font-semibold text-sm flex flex-row items-center">
+          {text}
+        </div>
       </div>
     );
   };
@@ -59,7 +61,7 @@ const UserMenu = ({ category }: props) => {
   const renderSmallMenu = () => {
     return (
       <div className="absolute top-[25px]">
-        <div className="bg-white w-[200px] p-2 rounded-lg border shadow border-indigo-500">
+        <div className="bg-slate-800  w-[200px] p-2 rounded-lg border shadow flex flex-col gap-2 ">
           {renderSmallMenuButton("Konto", () => {}, <AiOutlineUser />)}
           {renderSmallMenuButton("Wyloguj", logout, <BiLogOut />)}
         </div>
@@ -162,7 +164,9 @@ const UserMenu = ({ category }: props) => {
         menuBigRef.current &&
         !(menuBigRef.current as Node).contains(event.target as Node)
       ) {
-        setOpen(false);
+        setTimeout(() => {
+          setOpen(false);
+        }, 100);
       }
     };
 
