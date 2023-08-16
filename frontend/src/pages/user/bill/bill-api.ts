@@ -103,12 +103,22 @@ class BillApi extends Api {
   }
 
   static async getUsersInBill(id: string): Promise<string[]> {
+    await new Promise((r) => setTimeout(r, 500));
+
     const newList: string[] = [];
 
     for (let i = 0; i < Math.floor(Math.random() * 10 + 3); i++) {
       newList.push(`${i}`);
     }
     return newList;
+  }
+
+  static async getCurrencyInBill(id: string): Promise<string> {
+    await new Promise((r) => setTimeout(r, 500));
+
+    const currency = ["€", "$", "£", "zł"];
+
+    return currency[Math.floor(Math.random() * currency.length)];
   }
 }
 

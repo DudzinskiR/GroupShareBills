@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import Box from "../../../../components/box/box";
 import Button, { Color } from "../../../../components/button/button";
@@ -7,9 +7,10 @@ import PieChart, {
 } from "../../../../components/pie-chart/pie-chart";
 import useWindowDimensions from "../../../../hooks/useWindowDimensions";
 import { BillBalance } from "../../../../utils/models/bill/bill-balance";
-import shortenNumber from "../../../../utils/shortenNumber";
+import shortenNumber from "../../../../utils/other/shortenNumber";
 import BillApi from "../bill-api";
 import Username from "../../../../components/username/username";
+import { BillsCacheContext } from "../../../../contexts/bills-cache-context";
 
 const SummaryBox = () => {
   const [chartSize, setChartSize] = useState(0);
@@ -18,6 +19,9 @@ const SummaryBox = () => {
   const [showAll, setShowAll] = useState(false);
   const [showNumber, setShowNumber] = useState(5);
   const { width } = useWindowDimensions();
+  const [currency, setCurrency] = useState("");
+
+  const { getCurrencyInBill } = useContext(BillsCacheContext)!;
 
   useEffect(() => {
     if (!billBalanceData?.users) return;
@@ -48,6 +52,14 @@ const SummaryBox = () => {
   }, []);
 
   useEffect(() => {
+    const fetchCurrency = async () => {
+      setCurrency(await getCurrencyInBill("1"));
+    };
+
+    fetchCurrency();
+  }, [getCurrencyInBill]);
+
+  useEffect(() => {
     if (width > 426) {
       setChartSize(250);
     } else {
@@ -70,7 +82,10 @@ const SummaryBox = () => {
             <Username id={userID} />
           </div>
           <div className="flex flex-row w-[100px] text-lg">
-            <div>{shortenNumber(value)} zł</div>
+            <div>
+              {shortenNumber(value)}
+              {currency}
+            </div>
           </div>
         </div>
         {value < 0 && (
@@ -94,6 +109,7 @@ const SummaryBox = () => {
               size={chartSize}
               minValue={0.05}
               maxNumber={showNumber}
+              currency={currency}
               sum={pieChartData.reduce((sum, data) => sum + data.value, 0)}
             />
           </div>

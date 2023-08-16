@@ -4,6 +4,7 @@ import { UserData } from "../utils/models/user/user-data";
 import { UsersCacheContext } from "./users-cache-context";
 interface BillsCacheType {
   getUsersInBill: (id: string) => Promise<UserData[]>;
+  getCurrencyInBill: (id: string) => Promise<string>;
 }
 
 interface CacheProviderProps {
@@ -19,9 +20,30 @@ const BillsCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
     {},
   );
 
+  const [currencyInBill, setCurrencyInBill] = useState<{
+    [key: string]: string;
+  }>({});
+
   const { getUser } = useContext(UsersCacheContext)!;
 
   const fetchedUsersInBill: { [key: string]: boolean } = {};
+  const fetchedCurrencyInBill: { [key: string]: string } = {};
+
+  const getCurrencyInBill = async (id: string) => {
+    if (currencyInBill[id] || fetchedCurrencyInBill[id]) {
+      return currencyInBill[id];
+    } else {
+      setCurrencyInBill((prev) => ({ ...prev, [id]: " " }));
+      fetchedCurrencyInBill[id] = " ";
+
+      const currency = await BillApi.getCurrencyInBill(id);
+
+      setCurrencyInBill((prev) => ({ ...prev, [id]: currency }));
+      fetchedCurrencyInBill[id] = currency;
+
+      return currencyInBill[id];
+    }
+  };
 
   const getUsersInBill = async (id: string) => {
     if (usersInBill[id] || fetchedUsersInBill[id]) {
@@ -56,7 +78,7 @@ const BillsCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
   };
 
   return (
-    <BillsCacheContext.Provider value={{ getUsersInBill }}>
+    <BillsCacheContext.Provider value={{ getUsersInBill, getCurrencyInBill }}>
       {children}
     </BillsCacheContext.Provider>
   );

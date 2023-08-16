@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import shortenNumber from "../../utils/shortenNumber";
+import shortenNumber from "../../utils/other/shortenNumber";
 import Username from "../username/username";
 interface props {
   data: PieChartData[];
@@ -52,6 +52,7 @@ const PieChart = ({
   size = 220,
   minValue = 0.1,
   sum,
+  currency,
 }: props) => {
   const [valueData, setValueData] = useState<valueData[]>([]);
 
@@ -231,7 +232,10 @@ const PieChart = ({
                 <div className="w-full flex justify-center">
                   <div className="w-2/4 border"></div>
                 </div>
-                <div>{shortenNumber(Math.abs(item.value))} zł</div>
+                <div>
+                  {shortenNumber(Math.abs(item.value))}
+                  {currency}
+                </div>
               </div>
             );
           } else {
@@ -262,7 +266,8 @@ const PieChart = ({
             </div>
             {sum !== 0 && (
               <div className="text-white font-bold sm:text-3xl text-xl">
-                {shortenNumber(Math.round(Math.abs(sum!) || 0))} zł
+                {shortenNumber(Math.round(Math.abs(sum!) || 0))}
+                {currency}
               </div>
             )}
           </div>

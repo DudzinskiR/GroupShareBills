@@ -3,7 +3,7 @@ import Box from "../../../../components/box/box";
 import PaymentButton from "./payment-button";
 import BillApi from "../bill-api";
 import { PaymentHistoryData } from "../../../../utils/models/bill/payment-data";
-import DateFormatter from "../../../../utils/date-formatter";
+import DateFormatter from "../../../../utils/other/date-formatter";
 import InputText from "../../../../components/input-text/input-text";
 import { BsFilterSquare } from "react-icons/bs";
 import Checkbox, {
@@ -12,7 +12,7 @@ import Checkbox, {
 import { BillsCacheContext } from "../../../../contexts/bills-cache-context";
 import { UserData } from "../../../../utils/models/user/user-data";
 import { Color } from "../../../../components/button/button";
-import deepCopy from "../../../../utils/deep-copy";
+import deepCopy from "../../../../utils/other/deep-copy";
 const HistoryBox = () => {
   const [paymentHistory, setPaymentHistory] = useState<PaymentHistoryData[]>(
     [],
@@ -33,7 +33,11 @@ const HistoryBox = () => {
   );
   const [searchText, setSearchText] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<CheckboxOption[]>([]);
-  const { getUsersInBill } = useContext(BillsCacheContext)!;
+  const [amountFrom, setAmountFrom] = useState("");
+  const [amountTo, setAmountTo] = useState("");
+
+  const [currency, setCurrency] = useState("");
+  const { getUsersInBill, getCurrencyInBill } = useContext(BillsCacheContext)!;
 
   const renderDateSeparator = (date: Date) => {
     return (
@@ -44,6 +48,23 @@ const HistoryBox = () => {
   };
 
   const renderPaymentHistory = () => {
+    let emptyTab = true;
+
+    for (const item of filteredHistory) {
+      if (item.payment.length) {
+        emptyTab = false;
+        break;
+      }
+    }
+
+    if (emptyTab) {
+      return (
+        <div className="flex justify-center items-center h-[200px] text-3xl font-bold text-slate-400">
+          Nic tu nie ma :(
+        </div>
+      );
+    }
+
     return filteredHistory.map((item, index) => {
       if (item.payment.length === 0) return <div key={index}></div>;
       return (
@@ -57,6 +78,7 @@ const HistoryBox = () => {
                     <PaymentButton
                       data={paymentItem}
                       isOpen={paymentItem.id === openID}
+                      currency={currency}
                       onClick={() =>
                         setOpenID(
                           paymentItem.id !== openID ? paymentItem.id : "",
@@ -101,24 +123,46 @@ const HistoryBox = () => {
               value={searchText}
               onChange={(val) => setSearchText(val)}
             />
-            <div className="flex flex-row w-3/4 justify-between my-3">
+            <div className="flex flex-col sm:flex-row w-3/4 justify-between my-3 gap-3">
               <Checkbox
-                title="Przypisani użytkownicy"
+                title="Użytkownicy"
                 options={usersCheckboxList}
                 value={selectedUsers}
                 onChange={(val) => {
                   setSelectedUsers(val);
                 }}
+                btnClassName="text-sm"
               />
 
               <Checkbox
-                title="Utworzone przez"
+                title="Dodane przez"
                 options={usersCheckboxList}
                 color={Color.PURPLE}
                 value={selectedCreators}
                 onChange={(val) => {
                   setSelectedCreators(val);
                 }}
+                btnClassName="text-sm "
+              />
+            </div>
+
+            <div className="flex flex-row w-3/4 justify-between">
+              <div className="flex justify-center items-center text-lg">
+                Kwota:
+              </div>
+              <InputText
+                label="Od"
+                className="w-[100px]"
+                type="number"
+                value={amountFrom}
+                onChange={(val) => setAmountFrom(val)}
+              />
+              <InputText
+                label="Do"
+                className="w-[100px]"
+                type="number"
+                value={amountTo}
+                onChange={(val) => setAmountTo(val)}
               />
             </div>
           </div>
@@ -162,8 +206,23 @@ const HistoryBox = () => {
       );
     }
 
+    if (Number(amountTo) > 0) {
+      for (const item of newHistory) {
+        item.payment = item.payment.filter((day) => {
+          return day.value > Number(amountFrom) && day.value < Number(amountTo);
+        });
+      }
+    }
+
     setFilteredHistory(newHistory);
-  }, [paymentHistory, searchText, selectedCreators, selectedUsers]);
+  }, [
+    paymentHistory,
+    searchText,
+    selectedCreators,
+    selectedUsers,
+    amountFrom,
+    amountTo,
+  ]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -171,9 +230,15 @@ const HistoryBox = () => {
 
       if (data) setUsersList([...data]);
     };
-
     fetchUsers();
-  }, [getUsersInBill]);
+  }, [getCurrencyInBill, getUsersInBill]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setCurrency(await getCurrencyInBill("1"));
+    };
+    fetchData();
+  }, [getCurrencyInBill]);
 
   useEffect(() => {
     if (!usersList) return;
@@ -200,6 +265,7 @@ const HistoryBox = () => {
     };
 
     fetchData();
+    // setCu
   }, []);
 
   return (

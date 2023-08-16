@@ -1,17 +1,18 @@
 import React from "react";
 import Button, { Color } from "../../../../components/button/button";
-import shortenNumber from "../../../../utils/shortenNumber";
+import shortenNumber from "../../../../utils/other/shortenNumber";
 import { PaymentData } from "../../../../utils/models/bill/payment-data";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import DateFormatter from "../../../../utils/date-formatter";
+import DateFormatter from "../../../../utils/other/date-formatter";
 import Username from "../../../../components/username/username";
 interface props {
   data: PaymentData;
   isOpen: boolean;
   onClick: () => void;
+  currency?: string;
 }
 
-const PaymentButton = ({ data, isOpen, onClick }: props) => {
+const PaymentButton = ({ data, isOpen, onClick, currency }: props) => {
   const renderUsersNumber = (num: number) => {
     let text = "";
 
@@ -31,7 +32,10 @@ const PaymentButton = ({ data, isOpen, onClick }: props) => {
     return (
       <div>
         <div className="font-semibold text-slate-800 text-sm">Kwota</div>
-        <div className="text-xl">{data.value}zł</div>
+        <div className="text-xl">
+          {data.value}
+          {currency}
+        </div>
       </div>
     );
   };
@@ -133,7 +137,8 @@ const PaymentButton = ({ data, isOpen, onClick }: props) => {
         </div>
         <div className="flex flex-row items-center">
           <div className="mr-3 text-lg font-semibold">
-            {shortenNumber(data.value)}zł
+            {shortenNumber(data.value)}
+            {currency}
           </div>
 
           <Button

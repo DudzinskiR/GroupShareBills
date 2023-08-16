@@ -7,6 +7,8 @@ interface props {
   options?: CheckboxOption[];
   title?: string;
   color?: Color;
+  className?: string;
+  btnClassName?: string;
 }
 
 export interface CheckboxOption {
@@ -14,7 +16,15 @@ export interface CheckboxOption {
   value: string;
 }
 
-const Checkbox = ({ onChange, options, title, value, color }: props) => {
+const Checkbox = ({
+  onChange,
+  options,
+  title,
+  value,
+  color,
+  className,
+  btnClassName,
+}: props) => {
   const [isOpen, setOpen] = useState(false);
   const [myValue, setMyValue] = useState<CheckboxOption[]>([]);
   const listRef = useRef(null);
@@ -38,23 +48,22 @@ const Checkbox = ({ onChange, options, title, value, color }: props) => {
   const renderList = () => {
     return (
       <div
-        className={`${
-          isOpen ? "pointer-events-auto " : "pointer-events-none "
-        }absolute top-[50px] bg-slate-800 w-full rounded-lg z-[20] p-2 duration-100 shadow`}
+        className={`${isOpen ? "pointer-events-auto " : "pointer-events-none "}
+        ${className} absolute top-[50px] bg-slate-800 w-full rounded-lg z-[20] p-2 duration-100 shadow`}
         ref={listRef}
         style={{
           opacity: `${isOpen ? 100 : 0}`,
         }}
       >
-        <div className="flex flex-row w-full justify-between mb-1">
+        <div className="flex flex-col md:flex-row w-full justify-between mb-1 gap-2">
           <button
-            className="bg-slate-700 rounded-lg px-3 py-1 font-poppins text-sm flex justify-center items-center text-white cursor-pointer"
+            className="bg-slate-700 duration-150 hover:bg-slate-600 rounded-lg px-3 py-1 font-poppins text-sm flex justify-center items-center text-white cursor-pointer"
             onClick={selectAll}
           >
             Wszystko
           </button>
           <button
-            className="bg-slate-700 rounded-lg px-3 py-1 font-poppins text-sm flex justify-center items-center text-white cursor-pointer"
+            className="bg-slate-700 duration-150 hover:bg-slate-600 rounded-lg px-3 py-1 font-poppins text-sm flex justify-center items-center text-white cursor-pointer"
             onClick={clearAll}
           >
             Wyczyść
@@ -74,7 +83,7 @@ const Checkbox = ({ onChange, options, title, value, color }: props) => {
   const renderOption = (item: CheckboxOption) => {
     return (
       <div
-        className="w-full p-2 bg-slate-700 h-10 my-1 text-white rounded font-semibold flex flex-row items-center cursor-pointer"
+        className="w-full p-2 bg-slate-700 duration-150 hover:bg-slate-600 h-10 my-1 text-white rounded font-semibold flex flex-row items-center cursor-pointer"
         onClick={() => onClickHandler(item)}
       >
         <input
@@ -125,7 +134,7 @@ const Checkbox = ({ onChange, options, title, value, color }: props) => {
       <Button
         text={title}
         onClick={() => setOpen(!isOpen)}
-        className="w-full"
+        className={`${btnClassName} w-full`}
         color={color}
       />
       {renderList()}
