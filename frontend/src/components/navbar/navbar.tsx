@@ -2,7 +2,7 @@ import React from "react";
 import Button from "../button/button";
 import { BiPlusCircle } from "react-icons/bi";
 import UserMenu from "./user-menu/user-menu";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface props {
   category?: NavbarCategory[];
@@ -23,19 +23,22 @@ const Navbar = ({ category }: props) => {
   const navigate = useNavigate();
 
   const renderButton = (item: NavbarButton, index: number) => {
+    console.log("🚀 ~ file: navbar.tsx:26 ~ renderButton ~ item:", item.to);
+
     return (
-      <div
+      <Link
+        to={item.to}
+        relative="path"
         key={index}
         className={`min-w-[100px] flex justify-center items-center border-indigo-500 cursor-pointer duration-150
-        ${
-          item.active
-            ? "border-b-2 font-semibold hover:text-indigo-500"
-            : "hover:text-indigo-900"
-        }
-        `}
+          ${
+            item.active
+              ? "border-b-2 font-semibold hover:text-indigo-500"
+              : "hover:text-indigo-900"
+          }`}
       >
         {item.text}
-      </div>
+      </Link>
     );
   };
 

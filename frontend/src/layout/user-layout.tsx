@@ -1,50 +1,58 @@
-import React from "react";
+import React, { useEffect } from "react";
 import UserRoute from "../routes/user-routes";
 import Navbar, { NavbarCategory } from "../components/navbar/navbar";
-// import Sidebar from "../components/sidebar/sidebar";
-
-const userButtons: NavbarCategory[] = [
-  {
-    buttons: [
-      {
-        text: "Rachunki",
-        to: "#",
-        index: 0,
-        active: false,
-      },
-    ],
-  },
-  {
-    buttons: [
-      {
-        text: "Podgląd",
-        to: "#",
-        index: 1,
-        active: true,
-      },
-      {
-        text: "Użytkownicy",
-        to: "#",
-        index: 2,
-        active: false,
-      },
-      {
-        text: "Ustawienia",
-        to: "#",
-        index: 3,
-        active: false,
-      },
-    ],
-  },
-];
+import { useLocation } from "react-router-dom";
 
 const UserLayout = () => {
+  const location = useLocation();
+
+  const userButtons: NavbarCategory[] = [
+    {
+      buttons: [
+        {
+          text: "Rachunki",
+          to: "#",
+          index: 0,
+          active: false,
+        },
+      ],
+    },
+    {
+      buttons: [
+        {
+          text: "Podgląd",
+          to: `/bill/${location.pathname.split("/")[2]}`,
+          index: 1,
+          active: location.pathname.split("/").length === 3,
+        },
+        {
+          text: "Użytkownicy",
+          to: `/bill/${location.pathname.split("/")[2]}/users`,
+          index: 2,
+          active: location.pathname.split("/")[3] === "users",
+        },
+        {
+          text: "Ustawienia",
+          to: `/bill/${location.pathname.split("/")[2]}/setting`,
+          index: 3,
+          active: location.pathname.split("/")[3] === "setting",
+        },
+      ],
+    },
+  ];
+
+  useEffect(() => {
+    console.log(location.pathname.split("/"));
+  }, [location]);
+
   return (
     <div className="relative flex justify-center">
       <div className="absolute w-full">
-        <Navbar category={userButtons} />
+        <Navbar
+          category={location.pathname.split("/").length < 3 ? [] : userButtons}
+        />
+        a<br />
       </div>
-      {/* <Sidebar /> */}
       <div className="lg:pt-[70px] pt-[50px] w-max-[1280px] w-[1280px]">
         <UserRoute />
       </div>

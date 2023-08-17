@@ -9,7 +9,11 @@ const UserRoutes = () => {
       <Route index element={<ListBillPage />}></Route>
       <Route path="/bill">
         <Route index element={<ListBillPage />}></Route>
-        <Route path=":id" element={<BillPage />}></Route>
+        <Route path=":id">
+          <Route index element={<BillPage />}></Route>
+          <Route path="users" element={<></>}></Route>
+          <Route path="setting" element={<></>}></Route>
+        </Route>
       </Route>
       {/* <Route index element={<BillPage />}></Route> */}
     </Routes>

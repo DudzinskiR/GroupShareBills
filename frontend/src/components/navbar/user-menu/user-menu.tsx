@@ -16,6 +16,7 @@ import Button, { Color } from "../../button/button";
 import { NavbarButton, NavbarCategory } from "../navbar";
 import { UserCacheContext } from "../../../contexts/user-context";
 import Username from "../../username/username";
+import { NavLink } from "react-router-dom";
 
 interface props {
   category?: NavbarCategory[];
@@ -71,7 +72,8 @@ const UserMenu = ({ category }: props) => {
 
   const renderBigMenuButton = (item: NavbarButton) => {
     return (
-      <div
+      <NavLink
+        to={item.to}
         key={item.index}
         className="h-[50px] flex items-center bg-slate-700 hover:bg-slate-600 rounded-lg w-full mb-3 duration-150"
       >
@@ -81,7 +83,7 @@ const UserMenu = ({ category }: props) => {
           )}
           <div className="ml-[55px]">{item.text}</div>
         </div>
-      </div>
+      </NavLink>
     );
   };
 
@@ -112,7 +114,7 @@ const UserMenu = ({ category }: props) => {
         <Button
           text="Nowy rachunek"
           leftIcon={<BiPlusCircle />}
-          onClick={() => console.log(1)}
+          onClick={() => console.log(1)} //TODO obsługa nowego rachunka
           className="my-3 h-[50px]"
         />
 
