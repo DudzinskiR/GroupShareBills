@@ -9,6 +9,7 @@ interface props {
   color?: Color;
   className?: string;
   btnClassName?: string;
+  withCounter?: boolean;
 }
 
 export interface CheckboxOption {
@@ -24,6 +25,7 @@ const Checkbox = ({
   color,
   className,
   btnClassName,
+  withCounter,
 }: props) => {
   const [isOpen, setOpen] = useState(false);
   const [myValue, setMyValue] = useState<CheckboxOption[]>([]);
@@ -69,13 +71,15 @@ const Checkbox = ({
             Wyczyść
           </button>
         </div>
-        {options?.map((item, index) => {
-          return (
-            <div key={index} className="flex flex-col">
-              {renderOption(item)}
-            </div>
-          );
-        })}
+        <div className=" max-h-[310px] overflow-y-auto">
+          {options?.map((item, index) => {
+            return (
+              <div key={index} className="flex flex-col">
+                {renderOption(item)}
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   };
@@ -132,7 +136,11 @@ const Checkbox = ({
   return (
     <div className="relative w-[200px]">
       <Button
-        text={title}
+        text={
+          withCounter && myValue.length > 0
+            ? `${title} (${myValue.length})`
+            : title
+        }
         onClick={() => setOpen(!isOpen)}
         className={`${btnClassName} w-full`}
         color={color}

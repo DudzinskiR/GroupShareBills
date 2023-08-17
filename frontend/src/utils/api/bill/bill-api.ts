@@ -5,6 +5,8 @@ import {
   PaymentHistoryData,
 } from "../../models/bill/payment-data";
 import BillData from "../../models/bill/bill-data";
+import { UserData } from "../../models/user/user-data";
+import { CheckboxOption } from "../../../components/checkbox/checkbox";
 
 class BillApi extends Api {
   static async getBillList(): Promise<BillData[]> {
@@ -94,10 +96,8 @@ class BillApi extends Api {
 
     const random = Math.floor(Math.random() * 3);
 
-    // const random = 1;
     if (random === 1) {
       const userNumber = Math.floor(Math.random() * 8 + 2);
-      // const userNumber = Math.floor(6);
 
       for (let i = 0; i < userNumber; i++) {
         const temp = Math.floor(Math.random() * 1000000 + 500) / 100;
@@ -125,14 +125,30 @@ class BillApi extends Api {
     return data;
   }
 
-  static async getUsersInBill(id: string): Promise<string[]> {
+  static async getUsersInBill(id: string): Promise<UserData[]> {
     await new Promise((r) => setTimeout(r, 500));
 
-    const newList: string[] = [];
+    const newList: UserData[] = [];
+
+    const names = [
+      "Bardzo długa nazwa sprawdzająca działanie zawijania",
+      "Robert",
+      "Zenek",
+      "Alfred",
+      "Karolina",
+      "Julia",
+      "Mateusz",
+      "Ola",
+    ];
 
     for (let i = 0; i < Math.floor(Math.random() * 10 + 3); i++) {
-      newList.push(`${i}`);
+      newList.push({
+        id: `${i}`,
+        username: names[Math.floor(Math.random() * names.length)],
+        active: Math.random() > 0.5 ? true : false,
+      });
     }
+
     return newList;
   }
 
@@ -142,6 +158,26 @@ class BillApi extends Api {
     const currency = ["€", "$", "£", "zł"];
 
     return currency[Math.floor(Math.random() * currency.length)];
+  }
+
+  static async postNewPayment(
+    description: string,
+    amount: number,
+    users: CheckboxOption[],
+  ): Promise<boolean> {
+    const usersID = users.map<string>((item) => item.value);
+
+    const msg = {
+      description: description,
+      amount: amount,
+      users: usersID,
+    };
+
+    const json = JSON.stringify(msg, null, 2);
+
+    alert(json);
+    console.log(json);
+    return true;
   }
 }
 

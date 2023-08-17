@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "../../../../components/box/box";
 import PaymentButton from "./payment-button";
-import BillApi from "../../../../utils/api/bill/bill-api";
 import { PaymentHistoryData } from "../../../../utils/models/bill/payment-data";
 import DateFormatter from "../../../../utils/other/date-formatter";
 import InputText from "../../../../components/input-text/input-text";
@@ -9,23 +8,23 @@ import { BsFilterSquare } from "react-icons/bs";
 import Checkbox, {
   CheckboxOption,
 } from "../../../../components/checkbox/checkbox";
-import { BillsCacheContext } from "../../../../contexts/bills-cache-context";
 import { UserData } from "../../../../utils/models/user/user-data";
 import { Color } from "../../../../components/button/button";
 import deepCopy from "../../../../utils/other/deep-copy";
-import { useParams } from "react-router-dom";
-const HistoryBox = () => {
-  const [paymentHistory, setPaymentHistory] = useState<PaymentHistoryData[]>(
-    [],
-  );
 
+interface props {
+  usersList: UserData[];
+  currency: string;
+  paymentHistory: PaymentHistoryData[];
+}
+
+const HistoryBox = ({ usersList, currency, paymentHistory }: props) => {
   const [filteredHistory, setFilteredHistory] = useState<PaymentHistoryData[]>(
     [],
   );
 
   const [openID, setOpenID] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [usersList, setUsersList] = useState<UserData[]>([]);
   const [usersCheckboxList, setUsersCheckboxList] = useState<CheckboxOption[]>(
     [],
   );
@@ -36,10 +35,6 @@ const HistoryBox = () => {
   const [selectedUsers, setSelectedUsers] = useState<CheckboxOption[]>([]);
   const [amountFrom, setAmountFrom] = useState("");
   const [amountTo, setAmountTo] = useState("");
-
-  const [currency, setCurrency] = useState("");
-  const { getUsersInBill, getCurrencyInBill } = useContext(BillsCacheContext)!;
-  const { id } = useParams();
 
   const renderDateSeparator = (date: Date) => {
     return (
@@ -174,38 +169,46 @@ const HistoryBox = () => {
   };
 
   useEffect(() => {
+    if (!paymentHistory) return;
+
     let newHistory: PaymentHistoryData[] = deepCopy(paymentHistory);
 
-    for (const item of newHistory) {
-      item.payment = item.payment.filter((day) => {
-        for (let creator of selectedCreators) {
-          if (day.creatorID === creator.value) {
-            return true;
-          }
-        }
-        return false;
-      });
-    }
-
-    for (const item of newHistory) {
-      item.payment = item.payment.filter((day) => {
-        for (let selectedUser of selectedUsers) {
-          for (let user of day.usersID) {
-            if (selectedUser.value === user) {
+    if (selectedCreators.length !== usersCheckboxList.length) {
+      for (const item of newHistory) {
+        item.payment = item.payment.filter((day) => {
+          for (let creator of selectedCreators) {
+            if (day.creatorID === creator.value) {
               return true;
             }
           }
-        }
-        return false;
-      });
+          return false;
+        });
+      }
     }
 
-    for (const item of newHistory) {
-      item.payment = item.payment.filter((day) =>
-        day.description
-          .toLocaleLowerCase()
-          .includes(searchText.toLocaleLowerCase()),
-      );
+    if (selectedCreators.length !== usersCheckboxList.length) {
+      for (const item of newHistory) {
+        item.payment = item.payment.filter((day) => {
+          for (let selectedUser of selectedUsers) {
+            for (let user of day.usersID) {
+              if (selectedUser.value === user) {
+                return true;
+              }
+            }
+          }
+          return false;
+        });
+      }
+    }
+
+    if (searchText !== "") {
+      for (const item of newHistory) {
+        item.payment = item.payment.filter((day) =>
+          day.description
+            .toLocaleLowerCase()
+            .includes(searchText.toLocaleLowerCase()),
+        );
+      }
     }
 
     if (Number(amountTo) > 0) {
@@ -224,23 +227,8 @@ const HistoryBox = () => {
     selectedUsers,
     amountFrom,
     amountTo,
+    usersCheckboxList.length,
   ]);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const data = await getUsersInBill(id!);
-
-      if (data) setUsersList([...data]);
-    };
-    fetchUsers();
-  }, [getCurrencyInBill, getUsersInBill, id]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setCurrency(await getCurrencyInBill(id!));
-    };
-    fetchData();
-  }, [getCurrencyInBill, id]);
 
   useEffect(() => {
     if (!usersList) return;
@@ -258,17 +246,6 @@ const HistoryBox = () => {
     setSelectedCreators([...newCheckboxList]);
     setSelectedUsers([...newCheckboxList]);
   }, [usersList]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await BillApi.getBillHistory(id!);
-
-      if (data) setPaymentHistory([...data]);
-    };
-
-    fetchData();
-    // setCu
-  }, [id]);
 
   return (
     <div className="w-full">

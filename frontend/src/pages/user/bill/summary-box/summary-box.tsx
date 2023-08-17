@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import Box from "../../../../components/box/box";
 import Button, { Color } from "../../../../components/button/button";
@@ -10,19 +10,20 @@ import { BillBalance } from "../../../../utils/models/bill/bill-balance";
 import shortenNumber from "../../../../utils/other/shortenNumber";
 import BillApi from "../../../../utils/api/bill/bill-api";
 import Username from "../../../../components/username/username";
-import { BillsCacheContext } from "../../../../contexts/bills-cache-context";
 import { useParams } from "react-router-dom";
 
-const SummaryBox = () => {
+interface props {
+  currency: string;
+}
+
+const SummaryBox = ({ currency }: props) => {
   const [chartSize, setChartSize] = useState(0);
   const [pieChartData, setPieChartData] = useState<PieChartData[]>([]);
   const [billBalanceData, setBillBalanceData] = useState<BillBalance>();
   const [showAll, setShowAll] = useState(false);
   const [showNumber, setShowNumber] = useState(5);
   const { width } = useWindowDimensions();
-  const [currency, setCurrency] = useState("");
   const { id } = useParams();
-  const { getCurrencyInBill } = useContext(BillsCacheContext)!;
 
   useEffect(() => {
     if (!billBalanceData?.users) return;
@@ -51,14 +52,6 @@ const SummaryBox = () => {
     fetchBillBalance();
     setShowNumber(5);
   }, [id]);
-
-  useEffect(() => {
-    const fetchCurrency = async () => {
-      setCurrency(await getCurrencyInBill(id!));
-    };
-
-    fetchCurrency();
-  }, [getCurrencyInBill, id]);
 
   useEffect(() => {
     if (width > 426) {

@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Button from "../../../components/button/button";
 import { FaArrowRight } from "react-icons/fa";
 import { GoPeople } from "react-icons/go";
-import BillApi from "../../../utils/api/bill/bill-api";
 import BillData from "../../../utils/models/bill/bill-data";
 import { useNavigate } from "react-router-dom";
+import { UserCacheContext } from "../../../contexts/user-context";
 
 const ListBillPage = () => {
   const [billList, setBillList] = useState<BillData[]>([]);
 
   const navigate = useNavigate();
+
+  const { getBillList } = useContext(UserCacheContext)!;
 
   const onClickHandler = (id: string) => {
     navigate(`/bill/${id}`);
@@ -38,17 +40,10 @@ const ListBillPage = () => {
 
   useEffect(() => {
     const fetchBillData = async () => {
-      const data = await BillApi.getBillList();
-      console.log(
-        "🚀 ~ file: list-bill-page.tsx:34 ~ fetchBillData ~ data:",
-        data,
-      );
-
-      setBillList(data);
+      setBillList(await getBillList());
     };
-
     fetchBillData();
-  }, []);
+  }, [getBillList]);
 
   return (
     <div className="grid grid-cols-1 gap-7 pb-5 md:grid-cols-2 py-3 px-3">

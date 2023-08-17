@@ -3,6 +3,7 @@ import UsersApi from "../utils/api/users/users-api";
 
 interface UsersCacheType {
   getUser: (id: string) => Promise<string>;
+  setUser: (id: string, name: string) => void;
 }
 
 interface CacheProviderProps {
@@ -31,8 +32,12 @@ const UsersCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
     }
   };
 
+  const setUser = (id: string, name: string) => {
+    setCache((prev) => ({ ...prev, [id]: name }));
+  };
+
   return (
-    <UsersCacheContext.Provider value={{ getUser }}>
+    <UsersCacheContext.Provider value={{ getUser, setUser }}>
       {children}
     </UsersCacheContext.Provider>
   );
