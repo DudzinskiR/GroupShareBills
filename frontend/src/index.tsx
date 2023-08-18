@@ -7,6 +7,7 @@ import reportWebVitals from "./reportWebVitals";
 import UserCacheProvider from "./contexts/user-context";
 import UsersCacheProvider from "./contexts/users-cache-context";
 import BillsCacheProvider from "./contexts/bills-cache-context";
+import UIProvider from "./contexts/ui-context";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -17,7 +18,9 @@ root.render(
       <UsersCacheProvider>
         <UserCacheProvider>
           <BillsCacheProvider>
-            <App />
+            <UIProvider>
+              <App />
+            </UIProvider>
           </BillsCacheProvider>
         </UserCacheProvider>
       </UsersCacheProvider>

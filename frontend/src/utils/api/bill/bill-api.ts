@@ -11,7 +11,7 @@ import { CheckboxOption } from "../../../components/checkbox/checkbox";
 class BillApi extends Api {
   static async getBillList(): Promise<BillData[]> {
     await new Promise((r) => setTimeout(r, 500));
-
+    console.log(222);
     const result: BillData[] = [];
     const billName = [
       "Wycieczka do zakopanego",
@@ -94,8 +94,8 @@ class BillApi extends Api {
       users: [],
     };
 
-    const random = Math.floor(Math.random() * 3);
-
+    let random = Math.floor(Math.random() * 3);
+    random = 2;
     if (random === 1) {
       const userNumber = Math.floor(Math.random() * 8 + 2);
 
@@ -161,6 +161,7 @@ class BillApi extends Api {
   }
 
   static async postNewPayment(
+    id: string,
     description: string,
     amount: number,
     users: CheckboxOption[],
@@ -168,6 +169,7 @@ class BillApi extends Api {
     const usersID = users.map<string>((item) => item.value);
 
     const msg = {
+      id: id,
       description: description,
       amount: amount,
       users: usersID,
@@ -176,8 +178,25 @@ class BillApi extends Api {
     const json = JSON.stringify(msg, null, 2);
 
     alert(json);
-    console.log(json);
+    console.log("New payment ", msg);
     return true;
+  }
+
+  static async postNewBill(name: string, currency: string): Promise<string> {
+    await new Promise((r) => setTimeout(r, 2000));
+
+    const msg = {
+      name,
+      currency,
+    };
+
+    const json = JSON.stringify(msg, null, 2);
+
+    alert(json);
+
+    console.log("New Bill", msg);
+
+    return Math.floor(Math.random() * 1000 + 100).toString();
   }
 }
 

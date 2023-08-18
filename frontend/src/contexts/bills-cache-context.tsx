@@ -44,6 +44,7 @@ const BillsCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
 
   const { setUser } = useContext(UsersCacheContext)!;
   const { getUserID } = useContext(UserCacheContext)!;
+
   const getCurrencyInBill = async (id: string) => {
     if (currencyInBill[id] || fetchedCurrencyInBill[id]) {
       return currencyInBill[id];

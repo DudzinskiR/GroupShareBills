@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import UserRoute from "../routes/user-routes";
 import Navbar, { NavbarCategory } from "../components/navbar/navbar";
 import { useLocation } from "react-router-dom";
+import NewBillBox from "../components/new-bill-box/new-bill-box";
 
 const UserLayout = () => {
   const location = useLocation();
@@ -41,10 +42,6 @@ const UserLayout = () => {
     },
   ];
 
-  useEffect(() => {
-    console.log(location.pathname.split("/"));
-  }, [location]);
-
   return (
     <div className="relative flex justify-center">
       <div className="absolute w-full">
@@ -56,6 +53,7 @@ const UserLayout = () => {
       <div className="lg:pt-[70px] pt-[50px] w-max-[1280px] w-[1280px]">
         <UserRoute />
       </div>
+      <NewBillBox />
     </div>
   );
 };

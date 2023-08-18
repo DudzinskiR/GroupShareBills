@@ -8,6 +8,7 @@ import { UserData } from "../../../../utils/models/user/user-data";
 import BillApi from "../../../../utils/api/bill/bill-api";
 import { BillsCacheContext } from "../../../../contexts/bills-cache-context";
 import { useParams } from "react-router-dom";
+import { UIContext } from "../../../../contexts/ui-context";
 
 interface props {
   paymentIsOpen: boolean;
@@ -28,11 +29,16 @@ const NewPaymentBox = ({
   const [amount, setAmount] = useState("");
 
   const { addPaymentInBill } = useContext(BillsCacheContext)!;
+  const { setHandingOverCallback, setPaymentWindowOpen } =
+    useContext(UIContext)!;
   const { id } = useParams();
+
+  const [paymentCallback, setPaymentCallback] = useState<() => void>();
 
   const createNewPayment = () => {
     const postData = async () => {
       const result = await BillApi.postNewPayment(
+        id!,
         description,
         Number(amount),
         selectedUsers,
@@ -46,6 +52,14 @@ const NewPaymentBox = ({
           selectedUsers.map<string>((item) => item.value),
         );
       }
+
+      setSelectedUsers(checkboxOption);
+      setDescription("");
+      setAmount("");
+
+      if (paymentCallback) paymentCallback();
+
+      closeWindow();
     };
 
     postData();
@@ -72,6 +86,29 @@ const NewPaymentBox = ({
 
     setSelectedUsers(newSelectedUsers);
   }, [usersList]);
+
+  useEffect(() => {
+    const newHandingOver = (
+      description: string,
+      amount: number,
+      paymentCallback: () => void,
+      user: UserData,
+    ) => {
+      setDescription(description);
+      setAmount(`${amount}`);
+      setSelectedUsers([{ label: user.username, value: user.id }]);
+
+      setPaymentCallback(() => {
+        return () => {
+          paymentCallback();
+        };
+      });
+
+      setPaymentWindowOpen(true);
+    };
+
+    setHandingOverCallback(newHandingOver);
+  }, [setHandingOverCallback, setPaymentWindowOpen]);
 
   return (
     <>
@@ -106,6 +143,7 @@ const NewPaymentBox = ({
                 type="number"
                 value={amount}
                 onChange={(val) => setAmount(val)}
+                min="0"
               />
             </div>
 
@@ -125,7 +163,11 @@ const NewPaymentBox = ({
                 text="Zapisz"
                 className="w-[200px]"
                 color={Color.GREEN}
-                enabled={selectedUsers.length > 0}
+                enabled={
+                  selectedUsers.length > 0 &&
+                  description.length > 3 &&
+                  Number(amount) > 0
+                }
                 onClick={createNewPayment}
               />
             </div>

@@ -21,9 +21,15 @@ const ListBillPage = () => {
     return (
       <div
         key={data.id}
-        className=" w-full h-28 bg-white rounded shadow border-2 hover:bg-slate-50 cursor-pointer duration-150"
+        className=" w-full h-28 bg-white rounded shadow border-2 hover:bg-slate-50 cursor-pointer duration-150 relative"
         onClick={() => onClickHandler(data.id)}
       >
+        {/* <div className="absolute top-0 left-0 w-full h-full">
+          <div className=" bg-gradient-to-l from-sky-500 to-indigo-500 w-96 h-96 absolute -top-40 -left-56 rounded-full opacity-[0.35]">
+            <div className="text-3xl flex items-center">$</div>
+          </div>
+        </div> */}
+
         <div className="w-full flex justify-center text-lg sm:text-xl md:text-2xl truncate mt-3">
           {data.name.slice(0, 32)}
         </div>

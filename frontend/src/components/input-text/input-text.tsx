@@ -7,6 +7,8 @@ interface props {
   type?: "password" | "text" | "number";
   error?: boolean;
   className?: string;
+  min?: string;
+  max?: string;
 }
 
 const InputText = ({
@@ -16,6 +18,8 @@ const InputText = ({
   type = "text",
   error,
   className = "",
+  min,
+  max,
 }: props) => {
   const [localError, setLocalError] = useState(false);
 
@@ -47,6 +51,8 @@ const InputText = ({
             : "focus:border-sky-500 focus:bg-sky-50/10 border-sky-400"
         } peer h-10 w-full border-b-4 placeholder-transparent border-0 focus:outline-0 bg-transparent`}
         placeholder=" "
+        min={min}
+        max={max}
       />
       <label className="absolute left-0 -top-2.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">
         {label}

@@ -5,6 +5,7 @@ import BillApi from "../utils/api/bill/bill-api";
 interface UserCacheType {
   getUserID: () => Promise<string>;
   getBillList: () => Promise<BillData[]>;
+  addNewBill: (id: string, name: string) => void;
 }
 
 interface UserCacheProviderProps {
@@ -17,7 +18,7 @@ export const UserCacheContext = createContext<UserCacheType | undefined>(
 
 const UserCacheProvider: React.FC<UserCacheProviderProps> = ({ children }) => {
   const [userID, setUserID] = useState("");
-  const [billList, setBillList] = useState<BillData[] | undefined>(undefined);
+  const [billList, setBillList] = useState<BillData[]>([]);
   let fetchedUserID = false;
 
   const getUserID = async () => {
@@ -34,7 +35,7 @@ const UserCacheProvider: React.FC<UserCacheProviderProps> = ({ children }) => {
   };
 
   const getBillList = async () => {
-    if (billList) {
+    if (billList.length > 0) {
       return billList;
     } else {
       const result = await BillApi.getBillList();
@@ -44,8 +45,12 @@ const UserCacheProvider: React.FC<UserCacheProviderProps> = ({ children }) => {
     }
   };
 
+  const addNewBill = (id: string, name: string) => {
+    setBillList((prev) => [...prev, { id, name, userNumber: 1 }]);
+  };
+
   return (
-    <UserCacheContext.Provider value={{ getUserID, getBillList }}>
+    <UserCacheContext.Provider value={{ getUserID, getBillList, addNewBill }}>
       {children}
     </UserCacheContext.Provider>
   );

@@ -17,17 +17,20 @@ import { NavbarButton, NavbarCategory } from "../navbar";
 import { UserCacheContext } from "../../../contexts/user-context";
 import Username from "../../username/username";
 import { NavLink } from "react-router-dom";
+import { UIContext } from "../../../contexts/ui-context";
 
 interface props {
   category?: NavbarCategory[];
 }
 
 const UserMenu = ({ category }: props) => {
-  const [isOpen, setOpen] = useState(false);
   const { getUserID } = useContext(UserCacheContext)!;
   const menuSmallRef = useRef(null);
   const menuBigRef = useRef(null);
   const [username, setUsername] = useState("");
+
+  const { setNavMenuOpen, isNavMenuOpen, setNewBillOpen } =
+    useContext(UIContext)!;
 
   const logout = () => {
     console.log("Wylogowanie");
@@ -114,7 +117,10 @@ const UserMenu = ({ category }: props) => {
         <Button
           text="Nowy rachunek"
           leftIcon={<BiPlusCircle />}
-          onClick={() => console.log(1)} //TODO obsługa nowego rachunka
+          onClick={() => {
+            setNavMenuOpen(false);
+            setNewBillOpen(true);
+          }}
           className="my-3 h-[50px]"
         />
 
@@ -167,7 +173,7 @@ const UserMenu = ({ category }: props) => {
         !(menuBigRef.current as Node).contains(event.target as Node)
       ) {
         setTimeout(() => {
-          setOpen(false);
+          setNavMenuOpen(false);
         }, 100);
       }
     };
@@ -177,13 +183,13 @@ const UserMenu = ({ category }: props) => {
     return () => {
       document.removeEventListener("mousedown", handleOutsideClick);
     };
-  }, []);
+  }, [setNavMenuOpen]);
 
   return (
     <>
       <div
         className="flex flex-row items-center gap-2 cursor-pointer select-none lg:relative duration-150"
-        onClick={() => setOpen(!isOpen)}
+        onClick={() => setNavMenuOpen(!isNavMenuOpen())}
       >
         <div className="lg:flex flex-row items-center hidden">
           <div className="text-3xl text-gray-600">
@@ -198,11 +204,11 @@ const UserMenu = ({ category }: props) => {
 
       <div
         className="text-white absolute right-10 md:text-3xl text-2xl cursor-pointer lg:hidden"
-        onClick={() => setOpen(!isOpen)}
+        onClick={() => setNavMenuOpen(!isNavMenuOpen())}
       >
         <GiHamburgerMenu />
       </div>
-      {isOpen && renderMenu()}
+      {isNavMenuOpen() && renderMenu()}
     </>
   );
 };

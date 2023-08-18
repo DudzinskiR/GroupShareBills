@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import Button from "../button/button";
 import { BiPlusCircle } from "react-icons/bi";
 import UserMenu from "./user-menu/user-menu";
 import { Link, useNavigate } from "react-router-dom";
+import { UIContext } from "../../contexts/ui-context";
 
 interface props {
   category?: NavbarCategory[];
@@ -21,10 +22,8 @@ export interface NavbarButton {
 
 const Navbar = ({ category }: props) => {
   const navigate = useNavigate();
-
+  const { setNewBillOpen, setNavMenuOpen } = useContext(UIContext)!;
   const renderButton = (item: NavbarButton, index: number) => {
-    console.log("🚀 ~ file: navbar.tsx:26 ~ renderButton ~ item:", item.to);
-
     return (
       <Link
         to={item.to}
@@ -80,7 +79,10 @@ const Navbar = ({ category }: props) => {
             <Button
               text="Nowy rachunek"
               leftIcon={<BiPlusCircle />}
-              onClick={() => console.log(1)}
+              onClick={() => {
+                setNewBillOpen(true);
+                setNavMenuOpen(false);
+              }}
             />
           </div>
           <UserMenu category={category} />

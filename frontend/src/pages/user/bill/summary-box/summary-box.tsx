@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import Box from "../../../../components/box/box";
 import Button, { Color } from "../../../../components/button/button";
@@ -11,6 +11,7 @@ import shortenNumber from "../../../../utils/other/shortenNumber";
 import BillApi from "../../../../utils/api/bill/bill-api";
 import Username from "../../../../components/username/username";
 import { useParams } from "react-router-dom";
+import { UIContext } from "../../../../contexts/ui-context";
 
 interface props {
   currency: string;
@@ -19,11 +20,16 @@ interface props {
 const SummaryBox = ({ currency }: props) => {
   const [chartSize, setChartSize] = useState(0);
   const [pieChartData, setPieChartData] = useState<PieChartData[]>([]);
-  const [billBalanceData, setBillBalanceData] = useState<BillBalance>();
+  const [billBalanceData, setBillBalanceData] = useState<BillBalance>({
+    balance: 0,
+    users: [],
+  });
   const [showAll, setShowAll] = useState(false);
   const [showNumber, setShowNumber] = useState(5);
   const { width } = useWindowDimensions();
   const { id } = useParams();
+
+  const { openHandingOverMoney } = useContext(UIContext)!;
 
   useEffect(() => {
     if (!billBalanceData?.users) return;
@@ -87,6 +93,32 @@ const SummaryBox = ({ currency }: props) => {
             text="Przekaz"
             color={Color.GREEN}
             className="w-full md:w-[150px] mb-5 md:mb-0"
+            onClick={() => {
+              const paymentCallback = () => {
+                let newBill = { ...billBalanceData };
+
+                let newUsers = [];
+                for (const item of newBill?.users!) {
+                  if (item.id !== userID) {
+                    newUsers.push(item);
+                  }
+                }
+
+                newBill.users = newUsers;
+                setBillBalanceData(newBill);
+              };
+
+              openHandingOverMoney(
+                "Przekazanie środków",
+                Math.abs(value),
+                paymentCallback,
+                {
+                  id: userID,
+                  username: "",
+                  active: false,
+                },
+              );
+            }}
           />
         )}
       </div>

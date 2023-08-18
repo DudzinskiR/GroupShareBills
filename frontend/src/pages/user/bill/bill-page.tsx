@@ -10,8 +10,8 @@ import { UserData } from "../../../utils/models/user/user-data";
 import { BillsCacheContext } from "../../../contexts/bills-cache-context";
 import { useParams } from "react-router-dom";
 import { PaymentHistoryData } from "../../../utils/models/bill/payment-data";
+import { UIContext } from "../../../contexts/ui-context";
 const BillPage = () => {
-  const [paymentIsOpen, setPaymentOpen] = useState(false);
   const [usersList, setUsersList] = useState<UserData[]>([]);
   const [currency, setCurrency] = useState("");
   const [history, setHistory] = useState<PaymentHistoryData[]>([]);
@@ -19,10 +19,12 @@ const BillPage = () => {
   const { getUsersInBill, getCurrencyInBill, getHistoryInBill } =
     useContext(BillsCacheContext)!;
 
+  const { isPaymentWindowOpen, setPaymentWindowOpen } = useContext(UIContext)!;
+
   const { id } = useParams();
 
   const closeNewPayment = () => {
-    setPaymentOpen(false);
+    setPaymentWindowOpen(false);
   };
 
   useEffect(() => {
@@ -61,11 +63,11 @@ const BillPage = () => {
           rounded
           centerIcon={<AiOutlinePlus />}
           className="h-16 w-16 text-3xl"
-          onClick={() => setPaymentOpen(true)}
+          onClick={() => setPaymentWindowOpen(true)}
         />
       </div>
       <NewPaymentBox
-        paymentIsOpen={paymentIsOpen}
+        paymentIsOpen={isPaymentWindowOpen()}
         closeWindow={closeNewPayment}
         currency={currency}
         usersList={usersList}
