@@ -35,8 +35,6 @@ const ConfirmBox = () => {
             color={Color.PURPLE}
             onClick={getConfirmCallback()}
           />
-
-          <Button />
         </div>
       </div>
     </div>

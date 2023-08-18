@@ -9,6 +9,7 @@ import { UIContext } from "../../../../contexts/ui-context";
 import { useParams } from "react-router-dom";
 import BillApi from "../../../../utils/api/bill/bill-api";
 import { BillsCacheContext } from "../../../../contexts/bills-cache-context";
+import { UserCacheContext } from "../../../../contexts/user-context";
 interface props {
   data: PaymentData;
   isOpen: boolean;
@@ -19,6 +20,7 @@ interface props {
 const PaymentButton = ({ data, isOpen, onClick, currency }: props) => {
   const { openConfirmBox } = useContext(UIContext)!;
   const { deletePaymentInBill } = useContext(BillsCacheContext)!;
+  const { userIsAdmin } = useContext(UserCacheContext)!;
   const { id } = useParams();
   const renderUsersNumber = (num: number) => {
     let text = "";
@@ -121,18 +123,20 @@ const PaymentButton = ({ data, isOpen, onClick, currency }: props) => {
             {renderUsers()}
             {renderCreator()}
           </div>
-          <div className="flex justify-center">
-            <Button
-              color={Color.RED}
-              text="Usuń"
-              className="w-3/4 mb-3"
-              onClick={() => {
-                openConfirmBox("Czy na pewno chcesz usunąć płatność?", () => {
-                  deletePayment();
-                });
-              }}
-            />
-          </div>
+          {userIsAdmin(id!) && (
+            <div className="flex justify-center">
+              <Button
+                color={Color.RED}
+                text="Usuń"
+                className="w-3/4 mb-3"
+                onClick={() => {
+                  openConfirmBox("Czy na pewno chcesz usunąć płatność?", () => {
+                    deletePayment();
+                  });
+                }}
+              />
+            </div>
+          )}
         </div>
       </div>
     );

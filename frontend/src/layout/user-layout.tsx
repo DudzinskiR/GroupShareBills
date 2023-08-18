@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import UserRoute from "../routes/user-routes";
 import Navbar, { NavbarCategory } from "../components/navbar/navbar";
 import { useLocation } from "react-router-dom";
 import NewBillBox from "../components/new-bill-box/new-bill-box";
 import ConfirmBox from "../components/confirm-box/confirm-box";
+import { UserCacheContext } from "../contexts/user-context";
 
 const UserLayout = () => {
   const location = useLocation();
@@ -42,6 +43,12 @@ const UserLayout = () => {
       ],
     },
   ];
+
+  const { getBillList } = useContext(UserCacheContext)!;
+
+  useEffect(() => {
+    getBillList();
+  }, [getBillList]);
 
   return (
     <div className="relative flex justify-center">

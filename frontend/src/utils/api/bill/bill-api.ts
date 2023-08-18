@@ -26,6 +26,7 @@ class BillApi extends Api {
         name: billName[Math.floor(Math.random() * billName.length)],
         userNumber: Math.floor(Math.random() * 5 + 2),
         id: `${i}`,
+        isAdmin: Math.random() >= 0.5,
       });
     }
     return result;

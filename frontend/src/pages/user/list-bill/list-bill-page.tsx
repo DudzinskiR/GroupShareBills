@@ -5,7 +5,7 @@ import { GoPeople } from "react-icons/go";
 import BillData from "../../../utils/models/bill/bill-data";
 import { useNavigate } from "react-router-dom";
 import { UserCacheContext } from "../../../contexts/user-context";
-
+import { BiSolidCrown } from "react-icons/bi";
 const ListBillPage = () => {
   const [billList, setBillList] = useState<BillData[]>([]);
 
@@ -24,12 +24,6 @@ const ListBillPage = () => {
         className=" w-full h-28 bg-white rounded shadow border-2 hover:bg-slate-50 cursor-pointer duration-150 relative"
         onClick={() => onClickHandler(data.id)}
       >
-        {/* <div className="absolute top-0 left-0 w-full h-full">
-          <div className=" bg-gradient-to-l from-sky-500 to-indigo-500 w-96 h-96 absolute -top-40 -left-56 rounded-full opacity-[0.35]">
-            <div className="text-3xl flex items-center">$</div>
-          </div>
-        </div> */}
-
         <div className="w-full flex justify-center text-lg sm:text-xl md:text-2xl truncate mt-3">
           {data.name.slice(0, 32)}
         </div>
@@ -40,12 +34,19 @@ const ListBillPage = () => {
           </div>
           <Button rounded className="w-12 h-12" centerIcon={<FaArrowRight />} />
         </div>
+
+        {data.isAdmin && (
+          <div className="absolute top-3 text-yellow-400 right-5 text-3xl">
+            <BiSolidCrown />
+          </div>
+        )}
       </div>
     );
   };
 
   useEffect(() => {
     const fetchBillData = async () => {
+      console.log(1);
       setBillList(await getBillList());
     };
     fetchBillData();
