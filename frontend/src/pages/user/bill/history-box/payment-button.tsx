@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import Button, { Color } from "../../../../components/button/button";
 import shortenNumber from "../../../../utils/other/shortenNumber";
 import { PaymentData } from "../../../../utils/models/bill/payment-data";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import DateFormatter from "../../../../utils/other/date-formatter";
 import Username from "../../../../components/username/username";
+import { UIContext } from "../../../../contexts/ui-context";
+import { useParams } from "react-router-dom";
+import BillApi from "../../../../utils/api/bill/bill-api";
+import { BillsCacheContext } from "../../../../contexts/bills-cache-context";
 interface props {
   data: PaymentData;
   isOpen: boolean;
@@ -13,6 +17,9 @@ interface props {
 }
 
 const PaymentButton = ({ data, isOpen, onClick, currency }: props) => {
+  const { openConfirmBox } = useContext(UIContext)!;
+  const { deletePaymentInBill } = useContext(BillsCacheContext)!;
+  const { id } = useParams();
   const renderUsersNumber = (num: number) => {
     let text = "";
 
@@ -95,7 +102,7 @@ const PaymentButton = ({ data, isOpen, onClick, currency }: props) => {
       <div
         className="w-11/12 bg-slate-100 duration-300 rounded-b-lg overflow-hidden"
         style={{
-          maxHeight: `${isOpen ? 500 : 0}px`,
+          maxHeight: `${isOpen ? 999 : 0}px`,
           opacity: `${isOpen ? 100 : 0}`,
         }}
       >
@@ -114,9 +121,30 @@ const PaymentButton = ({ data, isOpen, onClick, currency }: props) => {
             {renderUsers()}
             {renderCreator()}
           </div>
+          <div className="flex justify-center">
+            <Button
+              color={Color.RED}
+              text="Usuń"
+              className="w-3/4 mb-3"
+              onClick={() => {
+                openConfirmBox("Czy na pewno chcesz usunąć płatność?", () => {
+                  deletePayment();
+                });
+              }}
+            />
+          </div>
         </div>
       </div>
     );
+  };
+
+  const deletePayment = () => {
+    const deleteData = async () => {
+      await BillApi.deletePayment(data.id, `${id}`);
+      deletePaymentInBill(data.date, data.id, id!);
+    };
+
+    deleteData();
   };
 
   return (

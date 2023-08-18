@@ -3,6 +3,7 @@ import UserRoute from "../routes/user-routes";
 import Navbar, { NavbarCategory } from "../components/navbar/navbar";
 import { useLocation } from "react-router-dom";
 import NewBillBox from "../components/new-bill-box/new-bill-box";
+import ConfirmBox from "../components/confirm-box/confirm-box";
 
 const UserLayout = () => {
   const location = useLocation();
@@ -54,6 +55,7 @@ const UserLayout = () => {
         <UserRoute />
       </div>
       <NewBillBox />
+      <ConfirmBox />
     </div>
   );
 };

@@ -95,7 +95,7 @@ class BillApi extends Api {
     };
 
     let random = Math.floor(Math.random() * 3);
-    random = 2;
+
     if (random === 1) {
       const userNumber = Math.floor(Math.random() * 8 + 2);
 
@@ -197,6 +197,10 @@ class BillApi extends Api {
     console.log("New Bill", msg);
 
     return Math.floor(Math.random() * 1000 + 100).toString();
+  }
+
+  static async deletePayment(paymentID: string, billID: string) {
+    alert(JSON.stringify({ paymentID, billID }));
   }
 }
 

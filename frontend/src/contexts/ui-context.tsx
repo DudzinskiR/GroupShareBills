@@ -11,6 +11,12 @@ interface UIType {
   setNewBillOpen: (val: boolean) => void;
   isNewBillOpen: () => boolean;
 
+  setConfirmOpen: (val: boolean) => void;
+  isConfirmOpen: () => boolean;
+  openConfirmBox: (text: string, callback: () => void) => void;
+  getConfirmText: () => string;
+  getConfirmCallback: () => () => void;
+
   setHandingOverCallback: (
     paymentCallback: (
       description: string,
@@ -38,6 +44,10 @@ const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
   const [showPaymentWindow, setShowPaymentWindow] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showNewBill, setShowNewBill] = useState(false);
+  const [showConfirm, setConfirm] = useState(false);
+
+  const [confirmText, setConfirmText] = useState("");
+  const [confirmCallback, setConfirmCallback] = useState<() => void>(() => {});
 
   let paymentCallback: (
     description: string,
@@ -50,6 +60,33 @@ const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
     callback: () => void,
     user: UserData,
   ) => {};
+
+  const setConfirmOpen = (val: boolean) => {
+    setConfirm(val);
+  };
+
+  const isConfirmOpen = (): boolean => {
+    return showConfirm;
+  };
+
+  const openConfirmBox = (text: string, callback: () => void) => {
+    setConfirmOpen(true);
+    setConfirmText(text);
+    setConfirmCallback(() => {
+      return () => {
+        callback();
+        setConfirmOpen(false);
+      };
+    });
+  };
+
+  const getConfirmText = () => {
+    return confirmText;
+  };
+
+  const getConfirmCallback = () => {
+    return confirmCallback;
+  };
 
   const setNewBillOpen = (val: boolean) => {
     setShowNewBill(val);
@@ -107,6 +144,11 @@ const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
         openHandingOverMoney,
         setNewBillOpen,
         isNewBillOpen,
+        setConfirmOpen,
+        isConfirmOpen,
+        openConfirmBox,
+        getConfirmText,
+        getConfirmCallback,
       }}
     >
       {children}

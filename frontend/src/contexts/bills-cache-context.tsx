@@ -10,6 +10,8 @@ interface BillsCacheType {
   getCurrencyInBill: (id: string) => Promise<string>;
   getHistoryInBill: (id: string) => Promise<PaymentHistoryData[]>;
 
+  deletePaymentInBill: (date: Date, paymentID: string, billID: string) => void;
+
   addPaymentInBill: (
     id: string,
     description: string,
@@ -136,6 +138,27 @@ const BillsCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
     setHistoryInBill((prev) => ({ ...prev, [id]: [...bill] }));
   };
 
+  const deletePaymentInBill = async (
+    date: Date,
+    paymentID: string,
+    billID: string,
+  ) => {
+    const bill = historyInBill[billID];
+
+    for (const day of bill) {
+      if (
+        new DateFormatter(day.date).ddMMyyy ===
+        new DateFormatter(new Date()).ddMMyyy
+      ) {
+        day.payment = day.payment.filter((item) => {
+          return item.id !== paymentID;
+        });
+      }
+    }
+
+    setHistoryInBill((prev) => ({ ...prev, [billID]: [...bill] }));
+  };
+
   return (
     <BillsCacheContext.Provider
       value={{
@@ -143,6 +166,7 @@ const BillsCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
         getCurrencyInBill,
         getHistoryInBill,
         addPaymentInBill,
+        deletePaymentInBill,
       }}
     >
       {children}
