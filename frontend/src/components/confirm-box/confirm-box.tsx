@@ -24,16 +24,16 @@ const ConfirmBox = () => {
         </div>
         <div className="w-full flex flex-row justify-around">
           <Button
-            text="Nie"
-            className="w-32"
-            color={Color.BLUE}
-            onClick={() => setConfirmOpen(false)}
-          />
-          <Button
             text="Tak"
             className="w-32"
-            color={Color.PURPLE}
+            color={Color.BLUE}
             onClick={getConfirmCallback()}
+          />
+          <Button
+            text="Nie"
+            className="w-32"
+            color={Color.PURPLE}
+            onClick={() => setConfirmOpen(false)}
           />
         </div>
       </div>

@@ -7,6 +7,7 @@ interface UserCacheType {
   getBillList: () => Promise<BillData[]>;
   addNewBill: (id: string, name: string) => void;
   userIsAdmin: (billID: string) => boolean;
+  disableAdminInBill: (billID: string) => void;
 }
 
 interface UserCacheProviderProps {
@@ -67,9 +68,25 @@ const UserCacheProvider: React.FC<UserCacheProviderProps> = ({ children }) => {
     ]);
   };
 
+  const disableAdminInBill = (billID: string) => {
+    for (const item of billList) {
+      if (item.id === billID) {
+        item.isAdmin = false;
+      }
+    }
+
+    setBillList([...billList]);
+  };
+
   return (
     <UserCacheContext.Provider
-      value={{ getUserID, getBillList, addNewBill, userIsAdmin }}
+      value={{
+        getUserID,
+        getBillList,
+        addNewBill,
+        userIsAdmin,
+        disableAdminInBill,
+      }}
     >
       {children}
     </UserCacheContext.Provider>

@@ -18,6 +18,8 @@ interface BillsCacheType {
     amount: number,
     users: string[],
   ) => void;
+
+  setUserActive: (userID: string, billID: string, active: boolean) => void;
 }
 
 interface CacheProviderProps {
@@ -77,12 +79,8 @@ const BillsCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
       for (const item of usersID) {
         promiseTab.push(
           new Promise(async (resolve, rejects) => {
-            setUser(item.id, item.username);
-            resolve({
-              id: item.id,
-              username: item.username,
-              active: item.active,
-            });
+            setUser(item.id, `${item.username}`);
+            resolve(item);
           }),
         );
       }
@@ -159,6 +157,22 @@ const BillsCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
     setHistoryInBill((prev) => ({ ...prev, [billID]: [...bill] }));
   };
 
+  const setUserActive = async (
+    userID: string,
+    billID: string,
+    active: boolean,
+  ) => {
+    const users = usersInBill[billID];
+
+    for (const item of users) {
+      if (item.id === userID) {
+        item.active = active;
+      }
+    }
+
+    setUsersInBill((prev) => ({ ...prev, [billID]: [...users] }));
+  };
+
   return (
     <BillsCacheContext.Provider
       value={{
@@ -167,6 +181,7 @@ const BillsCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
         getHistoryInBill,
         addPaymentInBill,
         deletePaymentInBill,
+        setUserActive,
       }}
     >
       {children}

@@ -237,7 +237,7 @@ const HistoryBox = ({ usersList, currency, paymentHistory }: props) => {
 
     for (const item of usersList) {
       newCheckboxList.push({
-        label: item.username,
+        label: `${item.username}`,
         value: item.id,
       });
     }

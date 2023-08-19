@@ -14,7 +14,7 @@ const UserLayout = () => {
       buttons: [
         {
           text: "Rachunki",
-          to: "#",
+          to: "/",
           index: 0,
           active: false,
         },

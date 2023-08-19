@@ -71,7 +71,7 @@ const NewPaymentBox = ({
     setCheckboxOption(
       usersList.map<CheckboxOption>((item) => {
         return {
-          label: item.username,
+          label: `${item.username}`,
           value: item.id,
         };
       }),
@@ -80,7 +80,7 @@ const NewPaymentBox = ({
     const newSelectedUsers: CheckboxOption[] = [];
     for (const item of usersList) {
       if (item.active) {
-        newSelectedUsers.push({ label: item.username, value: item.id });
+        newSelectedUsers.push({ label: `${item.username}`, value: item.id });
       }
     }
 
@@ -96,7 +96,7 @@ const NewPaymentBox = ({
     ) => {
       setDescription(description);
       setAmount(`${amount}`);
-      setSelectedUsers([{ label: user.username, value: user.id }]);
+      setSelectedUsers([{ label: `${user.username}`, value: user.id }]);
 
       setPaymentCallback(() => {
         return () => {

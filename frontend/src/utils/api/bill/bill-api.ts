@@ -147,6 +147,7 @@ class BillApi extends Api {
         id: `${i}`,
         username: names[Math.floor(Math.random() * names.length)],
         active: Math.random() > 0.5 ? true : false,
+        amountPaid: Math.floor((Math.random() * 200000 + 50000) / 100),
       });
     }
 
@@ -203,6 +204,12 @@ class BillApi extends Api {
   static async deletePayment(paymentID: string, billID: string) {
     alert(JSON.stringify({ paymentID, billID }));
   }
+
+  static async setUserActive(userID: string, billID: string, active: boolean) {}
+
+  static async setUserAsAdmin(userID: string, billID: string) {}
+
+  static async deleteUserFromBill(userID: string, billID: string) {}
 }
 
 export default BillApi;
