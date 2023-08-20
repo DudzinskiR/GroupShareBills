@@ -5,6 +5,7 @@ interface props {
   options?: SelectOption[];
   value?: SelectOption;
   onChange?: (val: SelectOption) => void;
+  dark?: boolean;
 }
 
 export interface SelectOption {
@@ -12,7 +13,13 @@ export interface SelectOption {
   value?: string;
 }
 
-const SelectInput = ({ className = " ", options, value, onChange }: props) => {
+const SelectInput = ({
+  className = " ",
+  options,
+  value,
+  onChange,
+  dark,
+}: props) => {
   const onChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
     if (onChange)
       onChange({
@@ -23,7 +30,11 @@ const SelectInput = ({ className = " ", options, value, onChange }: props) => {
 
   return (
     <select
-      className={`${className} bg-slate-600 border border-slate-900 text-slate-50 text-sm rounded-lg block p-2.5`}
+      className={`${className} ${
+        dark
+          ? "bg-slate-600 border border-slate-900 text-slate-50"
+          : "bg-slate-100 border-slate-300 text-slate-800"
+      }  text-sm rounded-lg block p-2.5`}
       onChange={onChangeHandler}
       value={value?.value}
     >

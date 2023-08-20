@@ -8,6 +8,7 @@ interface UserCacheType {
   addNewBill: (id: string, name: string) => void;
   userIsAdmin: (billID: string) => boolean;
   disableAdminInBill: (billID: string) => void;
+  removeBillFromList: (billID: string) => void;
 }
 
 interface UserCacheProviderProps {
@@ -78,6 +79,10 @@ const UserCacheProvider: React.FC<UserCacheProviderProps> = ({ children }) => {
     setBillList([...billList]);
   };
 
+  const removeBillFromList = (billID: string) => {
+    setBillList((prev) => prev.filter((item) => item.id !== billID));
+  };
+
   return (
     <UserCacheContext.Provider
       value={{
@@ -86,6 +91,7 @@ const UserCacheProvider: React.FC<UserCacheProviderProps> = ({ children }) => {
         addNewBill,
         userIsAdmin,
         disableAdminInBill,
+        removeBillFromList,
       }}
     >
       {children}

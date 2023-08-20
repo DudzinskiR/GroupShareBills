@@ -2,38 +2,16 @@ import React, { useContext, useState } from "react";
 import { UIContext } from "../../contexts/ui-context";
 import InputText from "../input-text/input-text";
 import Button, { Color } from "../button/button";
-import SelectInput, { SelectOption } from "../select-input/select-input";
+import SelectInput from "../select-input/select-input";
 import BillApi from "../../utils/api/bill/bill-api";
 import { useNavigate } from "react-router-dom";
 import { UserCacheContext } from "../../contexts/user-context";
+import { currencyOptions } from "../../utils/other/currency-type";
 
 interface InputsValue {
   name: string;
   currency: string;
 }
-
-const selectOptions: SelectOption[] = [
-  {
-    label: "-Wybierz-",
-    value: "",
-  },
-  {
-    label: "Złotych (zł)",
-    value: "zł",
-  },
-  {
-    label: "Euro (€)",
-    value: "€",
-  },
-  {
-    label: "Funt (£)",
-    value: "£",
-  },
-  {
-    label: "Dolar ($)",
-    value: "$",
-  },
-];
 
 const NewBillBox = () => {
   const { isNewBillOpen, setNewBillOpen } = useContext(UIContext)!;
@@ -92,12 +70,19 @@ const NewBillBox = () => {
           />
 
           <SelectInput
-            options={selectOptions}
+            options={[
+              {
+                label: "-Wybierz-",
+                value: "",
+              },
+              ...currencyOptions,
+            ]}
             className="w-3/4"
             onChange={(val) => {
               setInputData((prev) => ({ ...prev, currency: `${val.value}` }));
             }}
             value={{ value: inputData.currency, label: "" }}
+            dark
           />
 
           <Button

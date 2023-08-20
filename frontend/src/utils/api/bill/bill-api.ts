@@ -205,11 +205,70 @@ class BillApi extends Api {
     alert(JSON.stringify({ paymentID, billID }));
   }
 
-  static async setUserActive(userID: string, billID: string, active: boolean) {}
+  static async setUserActive(userID: string, billID: string, active: boolean) {
+    const msg = {
+      userID,
+      billID,
+      active,
+    };
 
-  static async setUserAsAdmin(userID: string, billID: string) {}
+    alert(JSON.stringify(msg, null, 2));
 
-  static async deleteUserFromBill(userID: string, billID: string) {}
+    console.log("setUserActive", msg);
+  }
+
+  static async setUserAsAdmin(userID: string, billID: string) {
+    const msg = {
+      userID,
+      billID,
+    };
+
+    alert(JSON.stringify(msg, null, 2));
+
+    console.log("User admin", msg);
+  }
+
+  static async deleteUserFromBill(userID: string, billID: string) {
+    const msg = {
+      userID,
+      billID,
+    };
+
+    alert(JSON.stringify(msg, null, 2));
+
+    console.log("Delete user", msg);
+  }
+
+  static async updateBillSetting(billID: string, name: string) {
+    const msg = {
+      billID,
+      name,
+    };
+
+    alert(JSON.stringify(msg, null, 2));
+
+    console.log("Update setting", msg);
+  }
+
+  static async closeBill(billID: string) {
+    const msg = {
+      billID,
+    };
+
+    alert(JSON.stringify(msg, null, 2));
+
+    console.log("closeBill", msg);
+  }
+
+  static async leaveBill(billID: string) {
+    const msg = {
+      billID,
+    };
+
+    alert(JSON.stringify(msg, null, 2));
+
+    console.log("leave bill", msg);
+  }
 }
 
 export default BillApi;

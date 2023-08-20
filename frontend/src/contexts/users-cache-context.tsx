@@ -33,7 +33,7 @@ const UsersCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
   };
 
   const setUser = (id: string, name: string) => {
-    setCache((prev) => ({ ...prev, [id]: name }));
+    if (!cache[id]) setCache((prev) => ({ ...prev, [id]: name }));
   };
 
   return (

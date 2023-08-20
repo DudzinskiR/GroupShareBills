@@ -44,7 +44,7 @@ const Button = ({
       flex justify-center items-center shadow-md text-white font-semibold select-none p-2
       `}
       onClick={(e) => {
-        if (onClick) onClick(e);
+        if (onClick && enabled) onClick(e);
       }}
     >
       {leftIcon && <div className="text-2xl">{leftIcon}</div>}

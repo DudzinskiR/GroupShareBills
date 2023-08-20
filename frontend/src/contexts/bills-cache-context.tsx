@@ -20,6 +20,8 @@ interface BillsCacheType {
   ) => void;
 
   setUserActive: (userID: string, billID: string, active: boolean) => void;
+
+  updateBillData: (billID: string, billName: string, currency: string) => void;
 }
 
 interface CacheProviderProps {
@@ -173,6 +175,14 @@ const BillsCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
     setUsersInBill((prev) => ({ ...prev, [billID]: [...users] }));
   };
 
+  const updateBillData = (
+    billID: string,
+    billName: string,
+    currency: string,
+  ) => {
+    setCurrencyInBill((prev) => ({ ...prev, [billID]: currency }));
+  };
+
   return (
     <BillsCacheContext.Provider
       value={{
@@ -182,6 +192,7 @@ const BillsCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
         addPaymentInBill,
         deletePaymentInBill,
         setUserActive,
+        updateBillData,
       }}
     >
       {children}

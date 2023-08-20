@@ -18,7 +18,7 @@ const ConfirmBox = () => {
         className="w-full h-full fixed bg-black/50"
         onClick={() => setConfirmOpen(false)}
       ></div>
-      <div className="fixed max-w-[600px] z-50 md:w-[500px] sm:w-[400px] w-[300px] rounded-lg top-[100px] left-1/2 -translate-x-1/2 bg-slate-800 p-3 text-white shadow-lg border-4 border-slate-900">
+      <div className="fixed max-w-[600px] z-50 md:w-[500px] sm:w-[400px] w-[300px] rounded-lg top-[calc(50%-100px)] -translate-y-1/2 left-1/2 -translate-x-1/2 bg-slate-800 p-3 text-white shadow-lg border-4 border-slate-900">
         <div className="flex justify-center text-2xl font-bold text-slate-50 mb-5 text-center">
           {getConfirmText()}
         </div>
