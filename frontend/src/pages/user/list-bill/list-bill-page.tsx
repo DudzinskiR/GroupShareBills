@@ -46,7 +46,6 @@ const ListBillPage = () => {
 
   useEffect(() => {
     const fetchBillData = async () => {
-      console.log(1);
       setBillList(await getBillList());
     };
     fetchBillData();

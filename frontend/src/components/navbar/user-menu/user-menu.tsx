@@ -16,8 +16,9 @@ import Button, { Color } from "../../button/button";
 import { NavbarButton, NavbarCategory } from "../navbar";
 import { UserCacheContext } from "../../../contexts/user-context";
 import Username from "../../username/username";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { UIContext } from "../../../contexts/ui-context";
+import { signOutAccount } from "../../../utils/firebase/firebase";
 
 interface props {
   category?: NavbarCategory[];
@@ -28,12 +29,15 @@ const UserMenu = ({ category }: props) => {
   const menuSmallRef = useRef(null);
   const menuBigRef = useRef(null);
   const [username, setUsername] = useState("");
+  const navigate = useNavigate();
 
   const { setNavMenuOpen, isNavMenuOpen, setNewBillOpen } =
     useContext(UIContext)!;
 
   const logout = () => {
-    console.log("Wylogowanie");
+    navigate("/");
+    setNavMenuOpen(false);
+    signOutAccount();
   };
 
   useEffect(() => {
@@ -145,7 +149,7 @@ const UserMenu = ({ category }: props) => {
           text="Wyloguj"
           color={Color.PURPLE}
           className="mt-5"
-          onClick={() => console.log("Wylogowanie")}
+          onClick={logout}
         />
       </div>
     );

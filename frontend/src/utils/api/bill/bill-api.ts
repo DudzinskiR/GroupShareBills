@@ -10,11 +10,11 @@ import { CheckboxOption } from "../../../components/checkbox/checkbox";
 
 class BillApi extends Api {
   static async getBillList(): Promise<BillData[]> {
-    await new Promise((r) => setTimeout(r, 500));
-    console.log(222);
+    await super.get(`bill`);
+
     const result: BillData[] = [];
     const billName = [
-      "Wycieczka do zakopanego",
+      "pociąg do zakopanego",
       "Wycieczka nad morze",
       "Impreza na Piotrkowskiej",
       "Zwykły rachunek",
@@ -33,6 +33,8 @@ class BillApi extends Api {
   }
 
   static async getBillHistory(id: string): Promise<PaymentHistoryData[]> {
+    await super.get(`bill/${id}/history`);
+
     const paymentHistory: PaymentHistoryData[] = [];
     const descriptionType = [
       "Jedzonko",
@@ -77,7 +79,7 @@ class BillApi extends Api {
     return paymentHistory;
   }
   static async getBillBalance(id: string): Promise<BillBalance> {
-    await new Promise((r) => setTimeout(r, 500));
+    await super.get(`bill/${id}/balance`);
 
     const names = [
       "Bardzo długa nazwa sprawdzająca działanie zawijania",
@@ -127,7 +129,7 @@ class BillApi extends Api {
   }
 
   static async getUsersInBill(id: string): Promise<UserData[]> {
-    await new Promise((r) => setTimeout(r, 500));
+    await super.get(`bill/${id}/users`);
 
     const newList: UserData[] = [];
 
@@ -155,7 +157,7 @@ class BillApi extends Api {
   }
 
   static async getCurrencyInBill(id: string): Promise<string> {
-    await new Promise((r) => setTimeout(r, 500));
+    await super.get(`bill/${id}/currency`);
 
     const currency = ["€", "$", "£", "zł"];
 
@@ -168,106 +170,42 @@ class BillApi extends Api {
     amount: number,
     users: CheckboxOption[],
   ): Promise<boolean> {
-    const usersID = users.map<string>((item) => item.value);
-
-    const msg = {
-      id: id,
-      description: description,
-      amount: amount,
-      users: usersID,
-    };
-
-    const json = JSON.stringify(msg, null, 2);
-
-    alert(json);
-    console.log("New payment ", msg);
+    await super.post(`bill/${id}/payment`, { description, amount, users });
     return true;
   }
 
   static async postNewBill(name: string, currency: string): Promise<string> {
-    await new Promise((r) => setTimeout(r, 2000));
-
-    const msg = {
-      name,
-      currency,
-    };
-
-    const json = JSON.stringify(msg, null, 2);
-
-    alert(json);
-
-    console.log("New Bill", msg);
+    await super.post(`bill`, { name, currency });
 
     return Math.floor(Math.random() * 1000 + 100).toString();
   }
 
   static async deletePayment(paymentID: string, billID: string) {
-    alert(JSON.stringify({ paymentID, billID }));
+    await super.delete(`bill/${billID}/${paymentID}`);
   }
 
   static async setUserActive(userID: string, billID: string, active: boolean) {
-    const msg = {
-      userID,
-      billID,
-      active,
-    };
-
-    alert(JSON.stringify(msg, null, 2));
-
-    console.log("setUserActive", msg);
+    await super.put(`bill/${billID}/user/${userID}`, { active });
   }
 
   static async setUserAsAdmin(userID: string, billID: string) {
-    const msg = {
-      userID,
-      billID,
-    };
-
-    alert(JSON.stringify(msg, null, 2));
-
-    console.log("User admin", msg);
+    await super.put(`bill/${billID}/user/${userID}`, {});
   }
 
   static async deleteUserFromBill(userID: string, billID: string) {
-    const msg = {
-      userID,
-      billID,
-    };
-
-    alert(JSON.stringify(msg, null, 2));
-
-    console.log("Delete user", msg);
+    await super.delete(`bill/${billID}/user/${userID}`);
   }
 
   static async updateBillSetting(billID: string, name: string) {
-    const msg = {
-      billID,
-      name,
-    };
-
-    alert(JSON.stringify(msg, null, 2));
-
-    console.log("Update setting", msg);
+    await super.put(`bill/${billID}/setting`, { name });
   }
 
   static async closeBill(billID: string) {
-    const msg = {
-      billID,
-    };
-
-    alert(JSON.stringify(msg, null, 2));
-
-    console.log("closeBill", msg);
+    await super.delete(`bill/${billID}`);
   }
 
   static async leaveBill(billID: string) {
-    const msg = {
-      billID,
-    };
-
-    alert(JSON.stringify(msg, null, 2));
-
-    console.log("leave bill", msg);
+    await super.delete(`user/bill/${billID}`);
   }
 }
 

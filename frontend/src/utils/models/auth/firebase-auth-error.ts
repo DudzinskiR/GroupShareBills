@@ -1,0 +1,13 @@
+enum FirebaseAuthResponse {
+  SUCCESS,
+  EMAIL_EXISTS,
+  INVALID_EMAIL,
+  INVALID_PASSWORD,
+  WRONG_PASSWORD,
+  MISSING_PASSWORD,
+  USER_NOT_FOUND,
+  UID_EXISTS,
+  UNKNOWN,
+}
+
+export default FirebaseAuthResponse;
