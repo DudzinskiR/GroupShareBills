@@ -57,6 +57,9 @@ const ListBillPage = () => {
       {billList.map((item) => {
         return renderBillButton(item);
       })}
+      <div className="cursor-pointer w-full h-28 border-4 rounded-2xl flex justify-center items-center text-xl font-bold text-slate-500 hover:text-slate-600 border-slate-400 hover:border-slate-500 duration-150 border-dashed">
+        Dołącz do istniejącego rachunku
+      </div>
     </div>
   );
 };
