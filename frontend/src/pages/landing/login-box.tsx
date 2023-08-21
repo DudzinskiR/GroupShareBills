@@ -6,7 +6,7 @@ import {
   signInWithMail,
 } from "../../utils/firebase/firebase";
 import FirebaseAuthResponse from "../../utils/models/auth/firebase-auth-error";
-
+import { BsGoogle } from "react-icons/bs";
 interface props {
   toggleView: () => void;
   openForgottenBox: () => void;
@@ -49,7 +49,7 @@ const LoginBox = ({ toggleView, openForgottenBox }: props) => {
   };
 
   return (
-    <div className="w-3/4">
+    <div className="w-10/12">
       <div className="m-3 font-bold text-xl font-poppins underline">
         GroupShareBills
       </div>
@@ -95,6 +95,7 @@ const LoginBox = ({ toggleView, openForgottenBox }: props) => {
           <Button
             text="Logowanie Google"
             className="w-full"
+            leftIcon={<BsGoogle />}
             color={Color.GREEN}
             onClick={loginWithGoogle}
           />

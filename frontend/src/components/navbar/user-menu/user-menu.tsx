@@ -70,7 +70,13 @@ const UserMenu = ({ category }: props) => {
     return (
       <div className="absolute top-[25px]">
         <div className="bg-slate-800  w-[200px] p-2 rounded-lg border shadow flex flex-col gap-2 ">
-          {renderSmallMenuButton("Konto", () => {}, <AiOutlineUser />)}
+          {renderSmallMenuButton(
+            "Konto",
+            () => {
+              navigate("/user");
+            },
+            <AiOutlineUser />,
+          )}
           {renderSmallMenuButton("Wyloguj", logout, <BiLogOut />)}
         </div>
       </div>
@@ -100,7 +106,10 @@ const UserMenu = ({ category }: props) => {
         className="w-[90vw] bg-slate-800 flex rounded-lg p-4 flex-col"
         ref={menuBigRef}
       >
-        <div className="h-[50px] flex items-center bg-slate-700 rounded-lg w-full hover:bg-slate-600">
+        <div
+          className="h-[50px] flex items-center bg-slate-700 rounded-lg w-full hover:bg-slate-600 cursor-pointer"
+          onClick={() => navigate("/user")}
+        >
           <div className="text-white font-semibold flex flex-row items-center pl-3 justify-between w-full">
             <div className="flex flex-row items-center">
               <div className="text-3xl">

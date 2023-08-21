@@ -4,6 +4,7 @@ import BillPage from "../pages/user/bill/bill-page";
 import ListBillPage from "../pages/user/list-bill/list-bill-page";
 import UserListPage from "../pages/user/user-list/user-list";
 import BillSettingPage from "../pages/user/setting/bill-setting";
+import UserSettingPage from "../pages/user-setting/user-setting-page";
 
 const UserRoutes = () => {
   return (
@@ -17,7 +18,9 @@ const UserRoutes = () => {
           <Route path="setting" element={<BillSettingPage />}></Route>
         </Route>
       </Route>
-      {/* <Route index element={<BillPage />}></Route> */}
+      <Route path="/user">
+        <Route index element={<UserSettingPage />}></Route>
+      </Route>
     </Routes>
   );
 };

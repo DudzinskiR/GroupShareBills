@@ -96,7 +96,7 @@ const ForgottenPasswordBox = ({ switchView }: props) => {
   };
 
   return (
-    <div className="w-3/4">
+    <div className="w-10/12">
       {success ? renderSuccess() : renderForgottenBox()}
     </div>
   );

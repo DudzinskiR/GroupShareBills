@@ -41,7 +41,7 @@ const SignUpBox = ({ toggleView }: props) => {
   };
 
   return (
-    <div className="w-3/4">
+    <div className="w-10/12">
       <div className="m-3 font-bold text-xl font-poppins underline">
         GroupShareBills
       </div>
