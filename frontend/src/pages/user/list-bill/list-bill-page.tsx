@@ -49,7 +49,8 @@ const ListBillPage = () => {
       setBillList(await getBillList());
     };
     fetchBillData();
-  }, [getBillList]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="grid grid-cols-1 gap-7 pb-5 md:grid-cols-2 py-3 px-3">

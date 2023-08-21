@@ -25,7 +25,7 @@ interface props {
 }
 
 const UserMenu = ({ category }: props) => {
-  const { getUserID } = useContext(UserCacheContext)!;
+  const { getUserID, clearData } = useContext(UserCacheContext)!;
   const menuSmallRef = useRef(null);
   const menuBigRef = useRef(null);
   const [username, setUsername] = useState("");
@@ -38,6 +38,7 @@ const UserMenu = ({ category }: props) => {
     navigate("/");
     setNavMenuOpen(false);
     signOutAccount();
+    clearData();
   };
 
   useEffect(() => {
@@ -46,7 +47,8 @@ const UserMenu = ({ category }: props) => {
     };
 
     fetchUsername();
-  }, [getUserID]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const renderSmallMenuButton = (
     text?: string,

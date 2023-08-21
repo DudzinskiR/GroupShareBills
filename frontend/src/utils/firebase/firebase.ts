@@ -8,6 +8,7 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   sendPasswordResetEmail,
+  updatePassword,
 } from "firebase/auth";
 import FirebaseAuthResponse from "../models/auth/firebase-auth-error";
 
@@ -89,13 +90,24 @@ export const resetPassword = async (email: string) => {
   }
 };
 
+export const changePassword = async (oldPassword: string, password: string) => {
+  try {
+    await signInWithMail(auth.currentUser!.email!, oldPassword);
+
+    await updatePassword(auth.currentUser!, password);
+    return FirebaseAuthResponse.SUCCESS;
+  } catch (e) {
+    return decodeAuthError((e as FirebaseError).code);
+  }
+};
+
 export const signOutAccount = async () => {
   const auth = getAuth();
   signOut(auth);
 };
 
 const decodeAuthError = (code: string): FirebaseAuthResponse => {
-  // console.log("🚀 ~ file: firebase.ts:118 ~ decodeAuthError ~ code:", code);
+  console.log("🚀 ~ file: firebase.ts:118 ~ decodeAuthError ~ code:", code);
 
   switch (code) {
     case "auth/email-already-in-use":

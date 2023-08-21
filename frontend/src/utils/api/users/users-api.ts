@@ -16,6 +16,10 @@ class UsersApi extends Api {
     ];
     return `${names[Math.floor(Math.random() * names.length)]} - ${id}`;
   }
+
+  static async changeUsername(name: string) {
+    await super.put("user", name);
+  }
 }
 
 export default UsersApi;

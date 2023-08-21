@@ -9,10 +9,19 @@ interface UserCacheType {
   userIsAdmin: (billID: string) => boolean;
   disableAdminInBill: (billID: string) => void;
   removeBillFromList: (billID: string) => void;
+  clearData: () => void;
+  getAccountType: () => AccountType;
+  setAccountType: (type: AccountType) => void;
 }
 
 interface UserCacheProviderProps {
   children: ReactNode;
+}
+
+export enum AccountType {
+  UNKNOWN,
+  GOOGLE,
+  MAIL,
 }
 
 export const UserCacheContext = createContext<UserCacheType | undefined>(
@@ -22,8 +31,9 @@ export const UserCacheContext = createContext<UserCacheType | undefined>(
 const UserCacheProvider: React.FC<UserCacheProviderProps> = ({ children }) => {
   const [userID, setUserID] = useState("");
   const [billList, setBillList] = useState<BillData[]>([]);
-  let fetchedUserID = false;
+  const fetchedUserID = useRef(false);
   const fetchedBillList = useRef(false);
+  const [type, setType] = useState(AccountType.UNKNOWN);
 
   const userIsAdmin = (billID: string) => {
     for (const item of billList) {
@@ -38,10 +48,10 @@ const UserCacheProvider: React.FC<UserCacheProviderProps> = ({ children }) => {
   };
 
   const getUserID = async () => {
-    if (userID !== "" || fetchedUserID) {
+    if (userID !== "" || fetchedUserID.current) {
       return userID;
     } else {
-      fetchedUserID = true;
+      fetchedUserID.current = true;
 
       const data = await UserApi.getUserID();
       setUserID(data);
@@ -83,6 +93,21 @@ const UserCacheProvider: React.FC<UserCacheProviderProps> = ({ children }) => {
     setBillList((prev) => prev.filter((item) => item.id !== billID));
   };
 
+  const clearData = () => {
+    fetchedBillList.current = false;
+    fetchedUserID.current = false;
+    setBillList([]);
+    setUserID("");
+  };
+
+  const getAccountType = (): AccountType => {
+    return type;
+  };
+
+  const setAccountType = (type: AccountType) => {
+    setType(type);
+  };
+
   return (
     <UserCacheContext.Provider
       value={{
@@ -92,6 +117,9 @@ const UserCacheProvider: React.FC<UserCacheProviderProps> = ({ children }) => {
         userIsAdmin,
         disableAdminInBill,
         removeBillFromList,
+        clearData,
+        getAccountType,
+        setAccountType,
       }}
     >
       {children}

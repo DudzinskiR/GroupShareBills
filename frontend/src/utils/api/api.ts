@@ -1,30 +1,46 @@
 import axios, { AxiosResponse } from "axios";
+import { getToken } from "../firebase/firebase";
 
 class Api {
   private static API_ROOT =
     process.env.REACT_APP_API_ROOT || "http://localhost:8080";
 
+  private static token = "";
+
   private static debugMode = true;
+
+  private static async getTokenID(): Promise<string> {
+    return getToken()
+      .then((val) => {
+        return val;
+      })
+      .catch((e) => {
+        return " ";
+      });
+  }
 
   protected static async get<T>(
     link: string,
     headers?: {},
   ): Promise<T | undefined> {
+    const newHeaders = {
+      ...headers,
+      Authorization: `Bearer ${await this.getTokenID()}`,
+    };
+
     if (this.debugMode) {
       await new Promise((r) => setTimeout(r, Math.random() * 2000 + 500));
 
-      console.log(
-        `GET - Link -> ${this.API_ROOT}/${link}`,
-        `headers ->`,
-        headers,
-      );
+      console.log(`GET - Link -> ${this.API_ROOT}/${link}`, `headers ->`, {
+        headers: newHeaders,
+      });
       return;
     }
 
     try {
       const res: AxiosResponse<T, any> = await axios.get<T>(
         `${this.API_ROOT}/${link}`,
-        { headers: headers },
+        { headers: newHeaders },
       );
 
       return res.data;
@@ -38,6 +54,11 @@ class Api {
     body: any,
     headers?: {},
   ): Promise<T | undefined> {
+    const newHeaders = {
+      ...headers,
+      Authorization: `Bearer ${await this.getTokenID()}`,
+    };
+
     if (this.debugMode) {
       await new Promise((r) => setTimeout(r, Math.random() * 2000 + 500));
       console.log(
@@ -45,7 +66,7 @@ class Api {
         ` body -> `,
         body,
         ` headers -> `,
-        headers,
+        { headers: newHeaders },
       );
       return;
     }
@@ -54,7 +75,7 @@ class Api {
       const res: AxiosResponse<T, any> = await axios.post(
         `${this.API_ROOT}/${link}`,
         body,
-        { headers: headers },
+        { headers: newHeaders },
       );
 
       return res.data;
@@ -66,6 +87,11 @@ class Api {
     body: any,
     headers?: {},
   ): Promise<T | undefined> {
+    const newHeaders = {
+      ...headers,
+      Authorization: `Bearer ${await this.getTokenID()}`,
+    };
+
     if (this.debugMode) {
       await new Promise((r) => setTimeout(r, Math.random() * 2000 + 500));
 
@@ -74,7 +100,7 @@ class Api {
         ` body -> `,
         body,
         ` headers -> `,
-        headers,
+        { headers: newHeaders },
       );
       return;
     }
@@ -83,7 +109,7 @@ class Api {
       const res: AxiosResponse<T, any> = await axios.put(
         `${this.API_ROOT}/${link}`,
         body,
-        { headers: headers },
+        { headers: newHeaders },
       );
 
       return res.data;
@@ -94,20 +120,23 @@ class Api {
     link: string,
     headers?: {},
   ): Promise<T | undefined> {
+    const newHeaders = {
+      ...headers,
+      Authorization: `Bearer ${await this.getTokenID()}`,
+    };
+
     if (this.debugMode) {
       await new Promise((r) => setTimeout(r, Math.random() * 2000 + 500));
 
-      console.log(
-        `DELETE - Link -> ${this.API_ROOT}/${link}`,
-        `headers ->`,
-        headers,
-      );
+      console.log(`DELETE - Link -> ${this.API_ROOT}/${link}`, `headers ->`, {
+        headers: newHeaders,
+      });
       return;
     }
     try {
       const res: AxiosResponse<T, any> = await axios.delete(
         `${this.API_ROOT}/${link}`,
-        { headers: headers },
+        { headers: newHeaders },
       );
 
       return res.data;

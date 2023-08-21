@@ -20,7 +20,6 @@ const LoginBox = ({ toggleView, openForgottenBox }: props) => {
   const loginWithGoogle = () => {
     signInWithGoogle().then((val) => {
       if (val === FirebaseAuthResponse.SUCCESS) {
-        console.log("Zalogowany");
         setError("");
         return;
       }
@@ -30,7 +29,6 @@ const LoginBox = ({ toggleView, openForgottenBox }: props) => {
   const signInButton = () => {
     signInWithMail(email, password).then((val) => {
       if (val === FirebaseAuthResponse.SUCCESS) {
-        console.log("Zalogowany");
         setError("");
         return;
       }
