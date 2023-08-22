@@ -2,8 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { getToken } from "../firebase/firebase";
 
 class Api {
-  private static API_ROOT =
-    process.env.REACT_APP_API_ROOT || "http://localhost:8080";
+  private static API_ROOT = process.env.REACT_APP_API_ROOT || "#";
 
   private static token = "";
 
