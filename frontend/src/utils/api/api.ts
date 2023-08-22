@@ -2,12 +2,15 @@ import axios, { AxiosResponse } from "axios";
 import { getToken } from "../firebase/firebase";
 
 class Api {
-  private static API_ROOT =
-    process.env.REACT_APP_API_ROOT || "http://localhost:8080";
+  private static API_ROOT = process.env.REACT_APP_API_ROOT || "";
 
   private static token = "";
 
-  private static debugMode = false;
+  private static debugMode = true;
+
+  private static getDelay() {
+    return Math.random() * 0 + 0;
+  }
 
   private static async getTokenID(): Promise<string> {
     return getToken()
@@ -29,7 +32,7 @@ class Api {
     };
 
     if (this.debugMode) {
-      await new Promise((r) => setTimeout(r, Math.random() * 2000 + 500));
+      await new Promise((r) => setTimeout(r, this.getDelay()));
 
       console.log(`GET - Link -> ${this.API_ROOT}/${link}`, `headers ->`, {
         headers: newHeaders,
@@ -60,7 +63,7 @@ class Api {
     };
 
     if (this.debugMode) {
-      await new Promise((r) => setTimeout(r, Math.random() * 2000 + 500));
+      await new Promise((r) => setTimeout(r, this.getDelay()));
       console.log(
         `POST - Link -> ${this.API_ROOT}/${link}`,
         ` body -> `,
@@ -93,7 +96,7 @@ class Api {
     };
 
     if (this.debugMode) {
-      await new Promise((r) => setTimeout(r, Math.random() * 2000 + 500));
+      await new Promise((r) => setTimeout(r, this.getDelay()));
 
       console.log(
         `PUT - Link -> ${this.API_ROOT}/${link}`,
@@ -126,7 +129,7 @@ class Api {
     };
 
     if (this.debugMode) {
-      await new Promise((r) => setTimeout(r, Math.random() * 2000 + 500));
+      await new Promise((r) => setTimeout(r, this.getDelay()));
 
       console.log(`DELETE - Link -> ${this.API_ROOT}/${link}`, `headers ->`, {
         headers: newHeaders,
