@@ -7,7 +7,7 @@ class Api {
 
   private static token = "";
 
-  private static debugMode = true;
+  private static debugMode = false;
 
   private static async getTokenID(): Promise<string> {
     return getToken()
