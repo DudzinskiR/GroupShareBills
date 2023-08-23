@@ -6,6 +6,8 @@ admin.initializeApp({
   databaseURL:
     "https://groupsharebills-default-rtdb.europe-west1.firebasedatabase.app",
 });
-const db = admin.firestore();
 
-export default db;
+export const db = admin.firestore();
+export const firebaseAuth = admin.auth();
+
+export default admin;

@@ -1,10 +1,10 @@
-import express from "express";
-import db from "../utils/firebase/firebase-config";
+import express, { Request, Response } from "express";
+import bill from "./bill-routes";
+import user from "./user-routes";
+
 const router = express.Router();
 
-router.use("", () => {
-  console.log(2);
-  db.collection("users").add({ name: "jedne", email: "dwa" });
-});
+router.use("/bill", bill);
+router.use("/user", user);
 
 export default router;

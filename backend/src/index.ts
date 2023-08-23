@@ -1,21 +1,18 @@
 import { config } from "dotenv";
-import express, { Application, Request, Response } from "express";
+import express, { Application } from "express";
 import cors from "cors";
-import { Server } from "http";
-import router from "./routes";
+import router from "@routes/index";
+import decodeToken from "@middleware/decode-token.middleware";
 
 config();
 
 const app: Application = express();
 app.use(cors());
 
-app.use("/api", router);
-
-app.get("/", (req: Request, res: Response) => {
-  res.send(`API running`);
-});
+app.use("/api", decodeToken, router);
 
 const PORT: Number = Number(process.env.PORT) || 8080;
-const server: Server = app.listen(PORT, () => {
+
+app.listen(PORT, () => {
   console.log(`Express started on port ${PORT} :)`);
 });
