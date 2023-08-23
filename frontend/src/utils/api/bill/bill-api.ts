@@ -46,7 +46,6 @@ class BillApi extends Api {
       "Wycieczka na atlantyde",
       "Cisza relaks",
       "Jakaś bardzo długa losowa nazwa. Tak długa żeby zobaczyć czy się bedzie dobrze wyświetlać",
-      "Najwidoczniej żeby wszystko sprawdzić muszę zrobić jeszcze dłuższą nazwę płatności. Nie wiem co tu mogę jeszcze napisać, to tylko napiszę że Izrael bezprawnie okupuje tereny należące do Palestyny ale opinia publiczna ma to w dupie i przyzwala na czystki etniczne",
     ];
 
     for (let i = 0; i < Math.floor(Math.random() * 5 + 5); i++) {
