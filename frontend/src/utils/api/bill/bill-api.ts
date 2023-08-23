@@ -14,7 +14,7 @@ class BillApi extends Api {
 
     const result: BillData[] = [];
     const billName = [
-      "pociąg do zakopanego",
+      "wycieczka do zakopanego",
       "Wycieczka nad morze",
       "Impreza na Piotrkowskiej",
       "Zwykły rachunek",
@@ -40,7 +40,7 @@ class BillApi extends Api {
       "Jedzonko",
       "Uber",
       "EscapeRoom",
-      "Naciągnięcie na hajs",
+      "Mniejsze wydatki",
       "Czary mary katakumby",
       "Lot w kosmos",
       "Wycieczka na atlantyde",
