@@ -8,7 +8,7 @@ export default class Exception extends Error {
     this.code = code;
   }
 
-  public toString = (): string => {
+  public toString(): string {
     return `[${this.name}] ${this.message} (Code: ${this.code})`;
-  };
+  }
 }

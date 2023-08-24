@@ -189,7 +189,7 @@ class BillApi extends Api {
   }
 
   static async setUserAsAdmin(userID: string, billID: string) {
-    await super.put(`bill/${billID}/user/${userID}`, {});
+    await super.put(`bill/${billID}/user/${userID}`, { admin: true });
   }
 
   static async deleteUserFromBill(userID: string, billID: string) {

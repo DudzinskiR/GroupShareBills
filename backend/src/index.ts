@@ -1,15 +1,19 @@
-import { config } from "dotenv";
+require("dotenv").config();
+
 import express, { Application } from "express";
 import cors from "cors";
 import router from "@routes/index";
 import decodeToken from "@middleware/decode-token.middleware";
-
-config();
+import getUser from "@middleware/get-user.middleware";
+import exceptionHandler from "@middleware/exception-handler.middleware";
 
 const app: Application = express();
-app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use("/api", decodeToken, router);
+app.use(cors());
+app.use("/api", decodeToken, getUser, router);
+app.use(exceptionHandler);
 
 const PORT: Number = Number(process.env.PORT) || 8080;
 

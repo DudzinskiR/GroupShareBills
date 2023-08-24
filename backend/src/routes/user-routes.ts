@@ -1,9 +1,10 @@
 import UserController from "@controllers/user.controller";
-import checkUser from "@middleware/check-user.middleware";
+import endpoint from "@middleware/endpoint.middleware";
 import express, { Request, Response } from "express";
 const router = express.Router();
 
-router.use("/:userID", UserController.getUsername);
-router.use("/", checkUser, UserController.getUserID);
+router.get("/", endpoint(UserController.getUserID));
+router.get("/:userID", endpoint(UserController.getUsername));
+router.put("/name", endpoint(UserController.changeUsername));
 
 export default router;
