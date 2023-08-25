@@ -1,7 +1,13 @@
 import express, { Request, Response } from "express";
-import BillService from "services/bill.service";
+import BillService from "services/bill/bill.service";
 
 class BillController {
+  static async getBills(req: Request, res: Response) {
+    const userID = req.user?.userID!;
+    const data = await BillService.getBills(userID);
+    res.status(200).send(data);
+  }
+
   static async createNewBill(req: Request, res: Response) {
     const data = await BillService.createNewBill(
       req.user?.userID!,
@@ -24,20 +30,9 @@ class BillController {
     res.status(200).send({ status: "ok" });
   }
 
-  static async setUserAsAdmin(req: Request, res: Response) {
-    const userID = req.params.userID;
+  static async getCurrency(req: Request, res: Response) {
     const billID = req.params.billID;
-
-    const data = await BillService.setUserAsAdmin(userID, billID);
-    res.status(200).send(data);
-  }
-
-  static async setUserActive(req: Request, res: Response) {
-    const userID = req.user?.userID!;
-    const billID = req.params.billID;
-    const active: boolean = `${req.body.active}`.toLocaleLowerCase() === "true";
-
-    const data = await BillService.setUserActive(userID, billID, active);
+    const data = await BillService.getCurrency(billID);
     res.status(200).send(data);
   }
 }

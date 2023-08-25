@@ -1,6 +1,6 @@
 import UserNotFoundException from "@exceptions/user-not-found.exception";
 import express, { Request, Response } from "express";
-import UserService from "services/user.service";
+import UserService from "services/user/user.service";
 
 class UserController {
   static async getUserID(req: Request, res: Response) {

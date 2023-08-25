@@ -2,9 +2,31 @@ import BillNotFoundException from "@exceptions/bill-not-found.exception";
 import DatabaseException from "@exceptions/database-error.exception";
 import UserNotFoundException from "@exceptions/user-not-found.exception";
 import admin, { db } from "@utils/firebase/firebase-config";
-import { Bill } from "types/bill";
+import { Bill } from "interfaces/bill";
+import User from "interfaces/user";
 
 class BillService {
+  static async getBills(userID: string) {
+    const userRef = db.collection("users").doc(userID);
+    const userData = (await userRef.get()).data() as User;
+
+    const result = [];
+
+    for (const billID of userData.billsID) {
+      const billRef = db.collection("bills").doc(billID);
+      const billData = (await billRef.get()).data() as Bill;
+
+      result.push({
+        name: billData.billName,
+        userNumber: billData.users.length,
+        id: billID,
+        isAdmin: billData.adminID === userID,
+      });
+    }
+
+    return result;
+  }
+
   static async createNewBill(
     userID: string,
     billName: string,
@@ -52,29 +74,11 @@ class BillService {
     await billRef.update({ isDelete: true });
   }
 
-  static async setUserAsAdmin(userID: string, billID: string) {
+  static async getCurrency(billID: string) {
     const billRef = db.collection("bills").doc(billID);
     const billData = (await billRef.get()).data() as Bill;
 
-    if (billData.users.some((user) => user.userID === userID)) {
-      billRef.update({ adminID: userID });
-    } else {
-      throw new UserNotFoundException();
-    }
-  }
-
-  static async setUserActive(userID: string, billID: string, active: boolean) {
-    const billRef = db.collection("bills").doc(billID);
-    const billData = (await billRef.get()).data() as Bill;
-    const newUsersList = [...billData.users];
-
-    for (const item of newUsersList) {
-      if (item.userID === userID) {
-        item.isActive = active;
-      }
-    }
-
-    await billRef.update({ users: newUsersList });
+    return billData.currency;
   }
 }
 

@@ -33,7 +33,7 @@ class BillApi extends Api {
   }
 
   static async getBillHistory(id: string): Promise<PaymentHistoryData[]> {
-    await super.get(`bill/${id}/history`);
+    await super.get(`bill/${id}/payment`);
 
     const paymentHistory: PaymentHistoryData[] = [];
     const descriptionType = [

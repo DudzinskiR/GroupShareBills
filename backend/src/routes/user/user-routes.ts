@@ -1,4 +1,4 @@
-import UserController from "@controllers/user.controller";
+import UserController from "@controllers/user/user.controller";
 import endpoint from "@middleware/endpoint.middleware";
 import express, { Request, Response } from "express";
 const router = express.Router();

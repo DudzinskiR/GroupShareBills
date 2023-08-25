@@ -1,6 +1,6 @@
 import { db } from "@utils/firebase/firebase-config";
 import express, { Request, Response, NextFunction } from "express";
-import User from "types/user";
+import User from "interfaces/user";
 
 const getUser = async (req: Request, res: Response, next: NextFunction) => {
   try {

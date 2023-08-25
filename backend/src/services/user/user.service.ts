@@ -13,16 +13,6 @@ class UserService {
     }
   }
 
-  private static async createUser(authID: string): Promise<string> {
-    const response = await db.collection("users").add({
-      authID: authID,
-      username: `user-${authID.slice(0, 5)}`,
-      billsID: [],
-    });
-
-    return response.id;
-  }
-
   public static async changeUsername(userID: string, newName: string) {
     await db.collection("users").doc(userID).update({ username: newName });
   }
