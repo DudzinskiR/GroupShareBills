@@ -12,6 +12,7 @@ interface UserCacheType {
   clearData: () => void;
   getAccountType: () => AccountType;
   setAccountType: (type: AccountType) => void;
+  changeBillName: (billID: string, billName: string) => void;
 }
 
 interface UserCacheProviderProps {
@@ -38,9 +39,7 @@ const UserCacheProvider: React.FC<UserCacheProviderProps> = ({ children }) => {
   const userIsAdmin = (billID: string) => {
     for (const item of billList) {
       if (item.id === billID) {
-        if (item.isAdmin) {
-          return true;
-        }
+        return item.isAdmin;
       }
     }
 
@@ -93,6 +92,17 @@ const UserCacheProvider: React.FC<UserCacheProviderProps> = ({ children }) => {
     setBillList((prev) => prev.filter((item) => item.id !== billID));
   };
 
+  const changeBillName = (billID: string, billName: string) => {
+    setBillList((prev) => {
+      for (const item of prev) {
+        if (item.id === billID) {
+          item.name = billName;
+        }
+      }
+      return prev;
+    });
+  };
+
   const clearData = () => {
     fetchedBillList.current = false;
     fetchedUserID.current = false;
@@ -120,6 +130,7 @@ const UserCacheProvider: React.FC<UserCacheProviderProps> = ({ children }) => {
         clearData,
         getAccountType,
         setAccountType,
+        changeBillName,
       }}
     >
       {children}

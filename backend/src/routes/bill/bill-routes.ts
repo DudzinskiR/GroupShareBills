@@ -12,10 +12,23 @@ router.post("/", endpoint(BillController.createNewBill));
 router.get("/", endpoint(BillController.getBills));
 router.put("/:billID", checkIsAdmin, endpoint(BillController.editBillSetting));
 router.delete("/:billID", checkIsAdmin, endpoint(BillController.closeBill));
+
+router.put(
+  "/:billID/setting",
+  checkIsAdmin,
+  endpoint(BillController.changeBillSetting)
+);
+
 router.get(
   "/:billID/currency",
   checkIsInBill,
   endpoint(BillController.getCurrency)
+);
+
+router.get(
+  "/:billID/balance",
+  checkIsInBill,
+  endpoint(BillController.getBillBalance)
 );
 
 router.use("/:billID/user", billUserRoutes);

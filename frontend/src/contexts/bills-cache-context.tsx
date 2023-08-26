@@ -3,8 +3,8 @@ import BillApi from "../utils/api/bill/bill-api";
 import { UserData } from "../utils/models/user/user-data";
 import { UsersCacheContext } from "./users-cache-context";
 import { PaymentHistoryData } from "../utils/models/bill/payment-data";
-import DateFormatter from "../utils/other/date-formatter";
 import { UserCacheContext } from "./user-context";
+import DateFormatter from "../utils/other/date-formatter";
 interface BillsCacheType {
   getUsersInBill: (id: string) => Promise<UserData[]>;
   getCurrencyInBill: (id: string) => Promise<string>;
@@ -81,7 +81,7 @@ const BillsCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
       for (const item of usersID) {
         promiseTab.push(
           new Promise(async (resolve, rejects) => {
-            setUser(item.id, `${item.username}`);
+            setUser(item.userID, `${item.username}`);
             resolve(item);
           }),
         );
@@ -116,21 +116,22 @@ const BillsCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
     users: string[],
   ) => {
     const bill = historyInBill[id];
+
     for (const day of bill) {
       if (
-        new DateFormatter(day.date).ddMMyyy ===
+        new DateFormatter(new Date(day.time)).ddMMyyy ===
         new DateFormatter(new Date()).ddMMyyy
       ) {
-        day.payment = [
+        day.payments = [
           {
             description: description,
             value: amount,
-            date: new Date(),
+            time: new Date().getTime(),
             creatorID: await getUserID(),
             usersID: users,
             id: Math.random() + "",
           },
-          ...day.payment,
+          ...day.payments,
         ];
       }
     }
@@ -147,10 +148,10 @@ const BillsCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
 
     for (const day of bill) {
       if (
-        new DateFormatter(day.date).ddMMyyy ===
+        new DateFormatter(new Date(day.time)).ddMMyyy ===
         new DateFormatter(new Date()).ddMMyyy
       ) {
-        day.payment = day.payment.filter((item) => {
+        day.payments = day.payments.filter((item) => {
           return item.id !== paymentID;
         });
       }
@@ -167,7 +168,7 @@ const BillsCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
     const users = usersInBill[billID];
 
     for (const item of users) {
-      if (item.id === userID) {
+      if (item.userID === userID) {
         item.active = active;
       }
     }

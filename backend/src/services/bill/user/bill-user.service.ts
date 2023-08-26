@@ -26,7 +26,6 @@ class BillUserService {
       if (item.userID === userID) {
         item.isActive = active;
         notFound = false;
-        console.log(userID);
       }
     }
 
@@ -45,11 +44,13 @@ class BillUserService {
     const userAmount: { [key: string]: number } = {};
     const result: UserInBill[] = [];
 
-    for (const payment of billData.payment) {
-      if (userAmount[payment.creatorID]) {
-        userAmount[payment.creatorID] += payment.value;
-      } else {
-        userAmount[payment.creatorID] = payment.value;
+    if (billData.payment) {
+      for (const payment of billData.payment) {
+        if (userAmount[payment.creatorID]) {
+          userAmount[payment.creatorID] += payment.value;
+        } else {
+          userAmount[payment.creatorID] = payment.value;
+        }
       }
     }
 
@@ -59,7 +60,7 @@ class BillUserService {
       const userData = userDoc.data() as User;
 
       result.push({
-        amountPaid: userAmount[user.userID],
+        amountPaid: userAmount[user.userID] || 0,
         username: userData.username,
         active: user.isActive,
         userID: userDoc.id,

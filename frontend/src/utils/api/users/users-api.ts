@@ -2,23 +2,19 @@ import Api from "../api";
 
 class UsersApi extends Api {
   static async getUser(id: string): Promise<string> {
-    await super.get<string>(`user/${id}/name`);
-
-    const names = [
-      "Bardzo długa nazwa sprawdzająca działanie zawijania",
-      "Robert",
-      "Zenek",
-      "Alfred",
-      "Karolina",
-      "Julia",
-      "Mateusz",
-      "Ola",
-    ];
-    return `${names[Math.floor(Math.random() * names.length)]} - ${id}`;
+    try {
+      const response = await super.get<string>(`user/${id}`);
+      return response!;
+    } catch (e) {
+      console.log(`error`);
+      return "error";
+    }
   }
 
   static async changeUsername(name: string) {
-    await super.put("user", name);
+    try {
+      await super.put("user/name", { username: name });
+    } catch (e) {}
   }
 }
 

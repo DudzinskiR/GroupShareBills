@@ -2,11 +2,12 @@ import axios, { AxiosResponse } from "axios";
 import { getToken } from "../firebase/firebase";
 
 class Api {
-  private static API_ROOT = process.env.REACT_APP_API_ROOT || "#";
+  private static API_ROOT =
+    process.env.REACT_APP_API_ROOT || "http://localhost:8080/api";
 
   private static token = "";
 
-  private static debugMode = true;
+  private static debugMode = false;
 
   private static async getTokenID(): Promise<string> {
     return getToken()
@@ -43,7 +44,8 @@ class Api {
       );
 
       return res.data;
-    } catch {
+    } catch (e) {
+      throw e;
       //Obsługa błędów
     }
   }
@@ -78,7 +80,9 @@ class Api {
       );
 
       return res.data;
-    } catch (e) {}
+    } catch (e) {
+      throw e;
+    }
   }
 
   protected static async put<T>(
@@ -112,7 +116,9 @@ class Api {
       );
 
       return res.data;
-    } catch (e) {}
+    } catch (e) {
+      throw e;
+    }
   }
 
   protected static async delete<T>(
@@ -139,7 +145,9 @@ class Api {
       );
 
       return res.data;
-    } catch (e) {}
+    } catch (e) {
+      throw e;
+    }
   }
 }
 

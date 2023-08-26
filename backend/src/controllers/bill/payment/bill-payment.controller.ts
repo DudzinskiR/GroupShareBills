@@ -22,6 +22,8 @@ class BillPaymentController {
       throw new InvalidValueException();
     }
 
+    console.log(billID, userID, description, amount, usersID);
+
     const data = await BillPaymentService.createPayment(
       billID,
       userID,
@@ -36,6 +38,15 @@ class BillPaymentController {
     const billID = req.params.billID;
     const payments = await BillPaymentService.getPayments(billID);
     res.status(200).send(payments);
+  }
+
+  static async deletePayment(req: Request, res: Response) {
+    const billID = req.params.billID;
+    const paymentID = req.params.paymentID;
+
+    const data = await BillPaymentService.deletePayment(billID, paymentID);
+
+    res.status(200).send(data);
   }
 }
 

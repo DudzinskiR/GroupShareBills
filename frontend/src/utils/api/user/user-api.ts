@@ -2,8 +2,12 @@ import Api from "../api";
 
 class UserApi extends Api {
   static async getUserID(): Promise<string> {
-    await super.get(`user`);
-    return `${Math.floor(Math.random() * 5)}`;
+    try {
+      const response = await super.get<string>(`user`);
+      return response!;
+    } catch (e) {
+      return "error";
+    }
   }
 }
 

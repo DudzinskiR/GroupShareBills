@@ -1,9 +1,12 @@
-import BillNotFoundException from "@exceptions/bill-not-found.exception";
-import DatabaseException from "@exceptions/database-error.exception";
-import UserNotFoundException from "@exceptions/user-not-found.exception";
-import admin, { db } from "@utils/firebase/firebase-config";
 import { Bill } from "interfaces/bill";
+import { BillBalance } from "interfaces/billBalance";
+import { Participant } from "interfaces/participant";
+import { Transaction } from "interfaces/transaction";
 import User from "interfaces/user";
+
+import DatabaseException from "@exceptions/database-error.exception";
+import admin, { db } from "@utils/firebase/firebase-config";
+import BillBalanceHelper from "@utils/helper/bill-balance-helper";
 
 class BillService {
   static async getBills(userID: string) {
@@ -15,6 +18,8 @@ class BillService {
     for (const billID of userData.billsID) {
       const billRef = db.collection("bills").doc(billID);
       const billData = (await billRef.get()).data() as Bill;
+
+      if (billData.isDelete) continue;
 
       result.push({
         name: billData.billName,
@@ -79,6 +84,63 @@ class BillService {
     const billData = (await billRef.get()).data() as Bill;
 
     return billData.currency;
+  }
+
+  static async changeBillSetting(billID: string, billName: string) {
+    const billRef = db.collection("bills").doc(billID);
+
+    billRef.update({
+      billName: billName,
+    });
+
+    return { status: "ok" };
+  }
+
+  static async getBillBalance(
+    billID: string,
+    userID: string
+  ): Promise<BillBalance> {
+    const billRef = db.collection("bills").doc(billID);
+    const billData = (await billRef.get()).data() as Bill;
+
+    const payments = billData.payment;
+
+    const balanceHelper = new BillBalanceHelper(
+      billData.users,
+      billData.payment
+    );
+
+    const result: BillBalance = {
+      balance: 0,
+      users: [],
+    };
+
+    const balance = balanceHelper.getBalance();
+    const transactions = balanceHelper.getTransactions();
+
+    result.balance = balance[userID];
+
+    result.balance = balance[userID];
+    if (balance[userID] > 0) {
+      for (const trans of transactions) {
+        if (trans.toUserID === userID) {
+          result.users.push({
+            id: trans.fromUserID,
+            balance: Math.abs(trans.amount),
+          });
+        }
+      }
+    } else if (balance[userID] < 0) {
+      for (const trans of transactions) {
+        if (trans.fromUserID === userID) {
+          result.users.push({
+            id: trans.toUserID,
+            balance: trans.amount,
+          });
+        }
+      }
+    }
+    return result;
   }
 }
 

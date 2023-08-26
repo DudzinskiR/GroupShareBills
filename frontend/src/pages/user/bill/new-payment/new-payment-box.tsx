@@ -9,6 +9,7 @@ import BillApi from "../../../../utils/api/bill/bill-api";
 import { BillsCacheContext } from "../../../../contexts/bills-cache-context";
 import { useParams } from "react-router-dom";
 import { UIContext } from "../../../../contexts/ui-context";
+import { UserCacheContext } from "../../../../contexts/user-context";
 
 interface props {
   paymentIsOpen: boolean;
@@ -27,10 +28,12 @@ const NewPaymentBox = ({
   const [selectedUsers, setSelectedUsers] = useState<CheckboxOption[]>([]);
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
+  const [userID, setUserID] = useState("");
 
   const { addPaymentInBill } = useContext(BillsCacheContext)!;
   const { setHandingOverCallback, setPaymentWindowOpen } =
     useContext(UIContext)!;
+  const { getUserID } = useContext(UserCacheContext)!;
   const { id } = useParams();
 
   const [paymentCallback, setPaymentCallback] = useState<() => void>();
@@ -66,26 +69,36 @@ const NewPaymentBox = ({
   };
 
   useEffect(() => {
+    getUserID().then((val) => {
+      setUserID(val);
+    });
+  }, [getUserID]);
+
+  useEffect(() => {
     if (!usersList) return;
 
-    setCheckboxOption(
-      usersList.map<CheckboxOption>((item) => {
-        return {
-          label: `${item.username}`,
-          value: item.id,
-        };
-      }),
-    );
+    const newCheckboxOptions: CheckboxOption[] = [];
+    for (const item of usersList) {
+      newCheckboxOptions.push({
+        label: `${item.username}`,
+        value: item.userID,
+      });
+    }
+
+    setCheckboxOption(newCheckboxOptions);
 
     const newSelectedUsers: CheckboxOption[] = [];
     for (const item of usersList) {
       if (item.active) {
-        newSelectedUsers.push({ label: `${item.username}`, value: item.id });
+        newSelectedUsers.push({
+          label: `${item.username}`,
+          value: item.userID,
+        });
       }
     }
 
     setSelectedUsers(newSelectedUsers);
-  }, [usersList]);
+  }, [userID, usersList]);
 
   useEffect(() => {
     const newHandingOver = (
@@ -96,7 +109,7 @@ const NewPaymentBox = ({
     ) => {
       setDescription(description);
       setAmount(`${amount}`);
-      setSelectedUsers([{ label: `${user.username}`, value: user.id }]);
+      setSelectedUsers([{ label: `${user.username}`, value: user.userID }]);
 
       setPaymentCallback(() => {
         return () => {

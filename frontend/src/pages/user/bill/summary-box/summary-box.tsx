@@ -113,7 +113,7 @@ const SummaryBox = ({ currency }: props) => {
                 Math.abs(value),
                 paymentCallback,
                 {
-                  id: userID,
+                  userID: userID,
                   username: "",
                   active: false,
                 },
@@ -136,7 +136,7 @@ const SummaryBox = ({ currency }: props) => {
               minValue={0.05}
               maxNumber={showNumber}
               currency={currency}
-              sum={pieChartData.reduce((sum, data) => sum + data.value, 0)}
+              sum={billBalanceData.balance}
             />
           </div>
 

@@ -9,7 +9,7 @@ export interface Bill {
   isDelete: boolean;
 }
 
-interface UserInBill {
+export interface UserInBill {
   userID: string;
   isActive: boolean;
 }

@@ -54,7 +54,7 @@ const PaymentButton = ({ data, isOpen, onClick, currency }: props) => {
       <div>
         <div className="font-semibold text-slate-800 text-sm">Czas</div>
         <div className="text-xl">
-          {new DateFormatter(data.date).ddMMyyyHHmm()}
+          {new DateFormatter(new Date(data.time)).ddMMyyyHHmm()}
         </div>
       </div>
     );
@@ -145,7 +145,7 @@ const PaymentButton = ({ data, isOpen, onClick, currency }: props) => {
   const deletePayment = () => {
     const deleteData = async () => {
       await BillApi.deletePayment(data.id, `${id}`);
-      deletePaymentInBill(data.date, data.id, id!);
+      deletePaymentInBill(new Date(data.time), data.id, id!);
     };
 
     deleteData();

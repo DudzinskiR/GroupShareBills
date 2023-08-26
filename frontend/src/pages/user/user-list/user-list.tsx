@@ -26,8 +26,8 @@ const UserListPage = () => {
       <div
         className="w-11/12 bg-slate-100 duration-300 rounded-b-lg overflow-hidden"
         style={{
-          maxHeight: `${openID === user.id ? 999 : 0}px`,
-          opacity: `${openID === user.id ? 100 : 0}`,
+          maxHeight: `${openID === user.userID ? 999 : 0}px`,
+          opacity: `${openID === user.userID ? 100 : 0}`,
         }}
       >
         <div className="p-3 flex flex-row justify-around">
@@ -59,7 +59,7 @@ const UserListPage = () => {
                     `Czy na pewno chcesz ustawić tego użytkownika jako ${
                       user.active ? "nieaktywny" : "aktywny"
                     }?`,
-                    () => setUserActiveHandler(user.id, !user.active),
+                    () => setUserActiveHandler(user.userID, !user.active),
                   );
                 }}
               />
@@ -69,7 +69,7 @@ const UserListPage = () => {
                 onClick={() => {
                   openConfirmBox(
                     `Czy na pewno chcesz usunąć z rachunku tego użytkownika?`,
-                    () => deleteUserFromBill(user.id),
+                    () => deleteUserFromBill(user.userID),
                   );
                 }}
               />
@@ -79,7 +79,7 @@ const UserListPage = () => {
                 onClick={() => {
                   openConfirmBox(
                     `Czy na pewno chcesz żeby ten użytkownik zarządzał rachunkiem?`,
-                    () => setUserAsAdmin(user.id),
+                    () => setUserAsAdmin(user.userID),
                   );
                 }}
               />
@@ -92,14 +92,14 @@ const UserListPage = () => {
 
   const renderUser = (user: UserData) => {
     return (
-      <div key={user.id}>
+      <div key={user.userID}>
         <div
           className={`${
-            openID === user.id
+            openID === user.userID
               ? "bg-slate-200"
               : "bg-slate-50 hover:bg-slate-100"
           } flex flex-row items-center h-10 w-full overflow-hidden rounded-xl text-lg font-montserrat px-3 z-1 relative justify-between shadow cursor-pointer`}
-          onClick={() => onClickHandler(user.id)}
+          onClick={() => onClickHandler(user.userID)}
         >
           <div className="flex flex-row items-center w-full">
             {!user.active ? <RiZzzFill className="text-xl" /> : <></>}
@@ -116,7 +116,7 @@ const UserListPage = () => {
             <Button
               rounded
               centerIcon={
-                openID === user.id ? <IoIosArrowUp /> : <IoIosArrowDown />
+                openID === user.userID ? <IoIosArrowUp /> : <IoIosArrowDown />
               }
               className="w-[30px] h-[30px] ml-5"
             />

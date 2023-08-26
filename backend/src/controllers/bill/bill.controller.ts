@@ -35,6 +35,20 @@ class BillController {
     const data = await BillService.getCurrency(billID);
     res.status(200).send(data);
   }
+
+  static async changeBillSetting(req: Request, res: Response) {
+    const billID = req.params.billID;
+    const billName = req.body.billName;
+    const data = await BillService.changeBillSetting(billID, billName);
+    res.status(200).send(data);
+  }
+
+  static async getBillBalance(req: Request, res: Response) {
+    const billID = req.params.billID;
+    const userID = req.user?.userID!;
+    const data = await BillService.getBillBalance(billID, userID);
+    res.status(200).send(data);
+  }
 }
 
 export default BillController;

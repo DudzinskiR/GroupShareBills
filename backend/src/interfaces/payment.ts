@@ -3,22 +3,22 @@ import { Timestamp } from "./Timestamp";
 export interface Payment {
   description: string;
   value: number;
-  date: Date;
   creatorID: string;
   usersID: string[];
   time: Timestamp;
+  isDelete: boolean;
 }
 
 export interface PaymentHistory {
-  time: Date;
+  time: number;
   payments: PaymentResponse[];
 }
 
 export interface PaymentResponse {
   description: string;
   value: number;
-  date: Date;
   creatorID: string;
   usersID: string[];
-  time: Date;
+  time: number;
+  id: string;
 }

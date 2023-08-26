@@ -48,7 +48,7 @@ const HistoryBox = ({ usersList, currency, paymentHistory }: props) => {
     let emptyTab = true;
 
     for (const item of filteredHistory) {
-      if (item.payment.length) {
+      if (item.payments.length) {
         emptyTab = false;
         break;
       }
@@ -63,12 +63,12 @@ const HistoryBox = ({ usersList, currency, paymentHistory }: props) => {
     }
 
     return filteredHistory.map((item, index) => {
-      if (item.payment.length === 0) return <div key={index}></div>;
+      if (item.payments.length === 0) return <div key={index}></div>;
       return (
         <div key={index}>
-          {renderDateSeparator(item.date)}
+          {renderDateSeparator(new Date(item.time))}
           <div>
-            {item.payment.map((paymentItem, paymentIndex) => {
+            {item.payments.map((paymentItem, paymentIndex) => {
               return (
                 <div key={paymentIndex} className="flex flex-col">
                   <div className="mt-3">
@@ -175,7 +175,7 @@ const HistoryBox = ({ usersList, currency, paymentHistory }: props) => {
 
     if (selectedCreators.length !== usersCheckboxList.length) {
       for (const item of newHistory) {
-        item.payment = item.payment.filter((day) => {
+        item.payments = item.payments.filter((day) => {
           for (let creator of selectedCreators) {
             if (day.creatorID === creator.value) {
               return true;
@@ -188,7 +188,7 @@ const HistoryBox = ({ usersList, currency, paymentHistory }: props) => {
 
     if (selectedCreators.length !== usersCheckboxList.length) {
       for (const item of newHistory) {
-        item.payment = item.payment.filter((day) => {
+        item.payments = item.payments.filter((day) => {
           for (let selectedUser of selectedUsers) {
             for (let user of day.usersID) {
               if (selectedUser.value === user) {
@@ -203,7 +203,7 @@ const HistoryBox = ({ usersList, currency, paymentHistory }: props) => {
 
     if (searchText !== "") {
       for (const item of newHistory) {
-        item.payment = item.payment.filter((day) =>
+        item.payments = item.payments.filter((day) =>
           day.description
             .toLocaleLowerCase()
             .includes(searchText.toLocaleLowerCase()),
@@ -213,7 +213,7 @@ const HistoryBox = ({ usersList, currency, paymentHistory }: props) => {
 
     if (Number(amountTo) > 0) {
       for (const item of newHistory) {
-        item.payment = item.payment.filter((day) => {
+        item.payments = item.payments.filter((day) => {
           return day.value > Number(amountFrom) && day.value < Number(amountTo);
         });
       }
@@ -238,7 +238,7 @@ const HistoryBox = ({ usersList, currency, paymentHistory }: props) => {
     for (const item of usersList) {
       newCheckboxList.push({
         label: `${item.username}`,
-        value: item.id,
+        value: item.userID,
       });
     }
 
