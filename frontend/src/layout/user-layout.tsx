@@ -53,7 +53,12 @@ const UserLayout = () => {
     <div className="relative flex justify-center">
       <div className="absolute w-full">
         <Navbar
-          category={location.pathname.split("/").length < 3 ? [] : userButtons}
+          category={
+            location.pathname.split("/").length < 3 ||
+            location.pathname.split("/")[1] === "invite"
+              ? []
+              : userButtons
+          }
         />
         a<br />
       </div>

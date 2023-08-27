@@ -12,6 +12,26 @@ router.post("/", endpoint(BillController.createNewBill));
 router.get("/", endpoint(BillController.getBills));
 router.put("/:billID", checkIsAdmin, endpoint(BillController.editBillSetting));
 router.delete("/:billID", checkIsAdmin, endpoint(BillController.closeBill));
+router.get("/:billID/name", endpoint(BillController.getBillName));
+
+router.post("/:billID/invite", endpoint(BillController.sendRequest));
+router.get(
+  "/:billID/invite",
+  checkIsAdmin,
+  endpoint(BillController.getRequests)
+);
+
+router.delete(
+  "/:billID/invite/:userID",
+  checkIsAdmin,
+  endpoint(BillController.deleteRequest)
+);
+
+router.post(
+  "/:billID/invite/:userID",
+  checkIsAdmin,
+  endpoint(BillController.acceptRequest)
+);
 
 router.put(
   "/:billID/setting",

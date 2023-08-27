@@ -7,6 +7,9 @@ import User from "interfaces/user";
 import DatabaseException from "@exceptions/database-error.exception";
 import admin, { db } from "@utils/firebase/firebase-config";
 import BillBalanceHelper from "@utils/helper/bill-balance-helper";
+import BillNotFoundException from "@exceptions/bill-not-found.exception";
+import { buffer } from "stream/consumers";
+import UserNotFoundException from "@exceptions/user-not-found.exception";
 
 class BillService {
   static async getBills(userID: string) {
@@ -14,6 +17,10 @@ class BillService {
     const userData = (await userRef.get()).data() as User;
 
     const result = [];
+
+    if (!userData.billsID) {
+      return;
+    }
 
     for (const billID of userData.billsID) {
       const billRef = db.collection("bills").doc(billID);
@@ -23,7 +30,7 @@ class BillService {
 
       result.push({
         name: billData.billName,
-        userNumber: billData.users.length,
+        userNumber: billData.users?.length,
         id: billID,
         isAdmin: billData.adminID === userID,
       });
@@ -50,6 +57,7 @@ class BillService {
           },
         ],
         isDelete: false,
+        request: [],
       };
 
       const bill = await db.collection("bills").add(newBill);
@@ -117,10 +125,6 @@ class BillService {
 
     const balance = balanceHelper.getBalance();
     const transactions = balanceHelper.getTransactions();
-    console.log(
-      "🚀 ~ file: bill.service.ts:120 ~ BillService ~ transactions:",
-      transactions
-    );
 
     if (Math.abs(balance[userID]) > 0.01) result.balance = balance[userID];
 
@@ -148,6 +152,87 @@ class BillService {
       }
     }
     return result;
+  }
+
+  static async getBillName(billID: string, userID: string) {
+    const billRef = db.collection("bills").doc(billID);
+    const billData = (await billRef.get()).data() as Bill;
+
+    if (!billData) {
+      throw new BillNotFoundException();
+    }
+
+    if (billData.users) {
+      if (billData.users.some((user) => user.userID === userID)) {
+        throw new BillNotFoundException();
+      }
+    }
+    return billData.billName;
+  }
+
+  static async sendRequest(billID: string, userID: string) {
+    const billRef = db.collection("bills").doc(billID);
+    const billData = (await billRef.get()).data() as Bill;
+    if (!billData) {
+      throw new BillNotFoundException();
+    }
+    if (billData.users) {
+      if (billData.users.some((user) => user.userID === userID)) {
+        return;
+      }
+    }
+    await billRef.update({
+      request: [...(billData.request || []), userID],
+    });
+  }
+
+  static async getRequests(billID: string) {
+    const billRef = db.collection("bills").doc(billID);
+    const billData = (await billRef.get()).data() as Bill;
+
+    const result = billData.request || [];
+
+    return result;
+  }
+
+  static async acceptRequest(billID: string, userID: string) {
+    const billRef = db.collection("bills").doc(billID);
+    const userRef = db.collection("users").doc(userID);
+
+    const billData = (await billRef.get()).data() as Bill;
+
+    if (billData.request) {
+      if (!billData.request.some((item) => item === userID)) {
+        throw new UserNotFoundException();
+      }
+    }
+
+    const newRequestList = billData.request.filter((item) => item !== userID);
+    const newUserList = [...billData.users];
+    newUserList.push({
+      userID: userID,
+      isActive: true,
+    });
+
+    billRef.update({ request: newRequestList, users: newUserList });
+    userRef.update({
+      billsID: admin.firestore.FieldValue.arrayUnion(billID),
+    });
+  }
+
+  static async deleteRequest(billID: string, userID: string) {
+    const billRef = db.collection("bills").doc(billID);
+    const billData = (await billRef.get()).data() as Bill;
+
+    if (billData.request) {
+      if (!billData.request.some((item) => item === userID)) {
+        throw new UserNotFoundException();
+      }
+    }
+
+    const newRequestList = billData.request.filter((item) => item !== userID);
+
+    billRef.update({ request: newRequestList });
   }
 }
 

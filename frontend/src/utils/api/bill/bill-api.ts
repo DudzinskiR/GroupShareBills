@@ -138,6 +138,43 @@ class BillApi extends Api {
       await super.delete(`bill/${billID}/user`);
     } catch (e) {}
   }
+
+  static async getBillName(billID: string) {
+    try {
+      const response = await super.get<string>(`bill/${billID}/name`);
+      return response || "";
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  static async sendRequest(billID: string) {
+    try {
+      await super.post(`bill/${billID}/invite`, {});
+    } catch (e) {}
+  }
+
+  static async getRequestList(billID: string): Promise<string[]> {
+    try {
+      const result = await super.get<string[]>(`bill/${billID}/invite`);
+      if (result) return result;
+      else return [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  static async acceptRequest(billID: string, userID: string) {
+    try {
+      await super.post(`bill/${billID}/invite/${userID}`, {});
+    } catch (e) {}
+  }
+
+  static async removeRequest(billID: string, userID: string) {
+    try {
+      await super.delete(`bill/${billID}/invite/${userID}`, {});
+    } catch (e) {}
+  }
 }
 
 export default BillApi;

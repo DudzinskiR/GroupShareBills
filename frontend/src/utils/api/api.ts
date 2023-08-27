@@ -3,7 +3,7 @@ import { getToken } from "../firebase/firebase";
 
 class Api {
   private static API_ROOT =
-    process.env.REACT_APP_API_ROOT || "http://localhost:8080/api";
+    process.env.REACT_APP_API_ROOT || "http://192.168.1.229:8080/api";
 
   private static token = "";
 
