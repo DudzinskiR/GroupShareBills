@@ -10,7 +10,7 @@ import BillApi from "../../../utils/api/bill/bill-api";
 const BillSettingPage = () => {
   const [billName, setBillName] = useState("");
 
-  const { getBillList, userIsAdmin, removeBillFromList } =
+  const { getBillList, userIsAdmin, removeBillFromList, changeBillName } =
     useContext(UserCacheContext)!;
   const { openConfirmBox } = useContext(UIContext)!;
 
@@ -87,7 +87,9 @@ const BillSettingPage = () => {
   };
 
   const saveBillCallback = () => {
-    BillApi.updateBillSetting(id!, billName).then(() => {});
+    BillApi.updateBillSetting(id!, billName).then(() => {
+      changeBillName(id!, billName);
+    });
   };
 
   const closeBillCallback = () => {

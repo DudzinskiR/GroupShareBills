@@ -2,5 +2,12 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.tabSize": 2,
-  "cSpell.words": ["appspot", "firebaseapp", "groupsharebills", "tailwindcss"]
+  "cSpell.words": [
+    "appspot",
+    "firebaseapp",
+    "firestore",
+    "groupsharebills",
+    "tailwindcss"
+  ],
+  "cSpell.ignorePaths": ["**/tsconfig.json"]
 }

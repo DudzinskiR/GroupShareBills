@@ -1,13 +1,13 @@
 export interface PaymentData {
   description: string;
   value: number;
-  date: Date;
+  time: number;
   creatorID: string;
   usersID: string[];
   id: string;
 }
 
 export interface PaymentHistoryData {
-  date: Date;
-  payment: PaymentData[];
+  time: number;
+  payments: PaymentData[];
 }
