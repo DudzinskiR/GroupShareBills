@@ -116,8 +116,9 @@ class BillApi extends Api {
   }
 
   static async deleteUserFromBill(userID: string, billID: string) {
-    //TODO: deleteUserFromBill
-    // await super.delete(`bill/${billID}/user/${userID}`);
+    try {
+      await super.delete(`bill/${billID}/user/${userID}`);
+    } catch (e) {}
   }
 
   static async updateBillSetting(billID: string, name: string) {
@@ -133,8 +134,9 @@ class BillApi extends Api {
   }
 
   static async leaveBill(billID: string) {
-    //TODO: leaveBill
-    // await super.delete(`user/bill/${billID}`);
+    try {
+      await super.delete(`bill/${billID}/user`);
+    } catch (e) {}
   }
 }
 
