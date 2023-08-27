@@ -7,6 +7,7 @@ export interface Bill {
   users: UserInBill[];
   adminID: string;
   isDelete: boolean;
+  request: string[];
 }
 
 export interface UserInBill {

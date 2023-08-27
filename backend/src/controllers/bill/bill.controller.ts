@@ -49,6 +49,41 @@ class BillController {
     const data = await BillService.getBillBalance(billID, userID);
     res.status(200).send(data);
   }
+
+  static async getBillName(req: Request, res: Response) {
+    const billID = req.params.billID;
+    const userID = req.user?.userID!;
+    const data = await BillService.getBillName(billID, userID);
+    res.status(200).send(data);
+  }
+
+  static async sendRequest(req: Request, res: Response) {
+    const billID = req.params.billID;
+    const userID = req.user?.userID!;
+
+    const data = await BillService.sendRequest(billID, userID);
+    res.status(200).send(data);
+  }
+
+  static async getRequests(req: Request, res: Response) {
+    const billID = req.params.billID;
+    const data = await BillService.getRequests(billID);
+    res.status(200).send(data);
+  }
+
+  static async acceptRequest(req: Request, res: Response) {
+    const billID = req.params.billID;
+    const userID = req.params.userID;
+    const data = await BillService.acceptRequest(billID, userID);
+    res.status(200).send(data);
+  }
+
+  static async deleteRequest(req: Request, res: Response) {
+    const billID = req.params.billID;
+    const userID = req.params.userID;
+    const data = await BillService.deleteRequest(billID, userID);
+    res.status(200).send(data);
+  }
 }
 
 export default BillController;

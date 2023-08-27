@@ -63,7 +63,7 @@ class BillUserService {
       const userData = userDoc.data() as User;
 
       result.push({
-        amountPaid: userAmount[user.userID] || 0,
+        amountPaid: parseFloat((userAmount[user.userID] || 0).toFixed(2)),
         username: userData.username,
         active: user.isActive,
         userID: userDoc.id,
@@ -77,54 +77,77 @@ class BillUserService {
     const billRef = db.collection("bills").doc(billID);
     const billData = (await billRef.get()).data() as Bill;
 
+    const userRef = db.collection("users").doc(userID);
+    const userData = (await userRef.get()).data() as User;
+
     if (!billData.users.some((user) => user.userID === userID)) {
       throw new UserNotFoundException();
     }
 
-    //TODO Usunięcie użytkownika z rachunku
-
-    //TODO Wyrównanie zależności użytkownika
     const billBalance = new BillBalanceHelper(billData.users, billData.payment);
     const transactions = billBalance.getTransactions();
     const balance = billBalance.getBalance()[userID];
     const newPayments: Payment[] = [];
 
-    if (transactions.length === 0) {
-      return { status: "ok" };
-    }
-
-    if (balance > 0) {
-      for (const trans of transactions) {
-        if (trans.toUserID === userID) {
-          newPayments.push({
-            description: `${trans.fromUserID} -> ${trans.toUserID}`,
-            value: Math.abs(trans.amount),
-            creatorID: trans.fromUserID,
-            usersID: [trans.toUserID],
-            time: admin.firestore.Timestamp.now(),
-            isDelete: false,
-            isHidden: true,
-          });
+    if (transactions.length !== 0) {
+      if (balance > 0) {
+        for (const trans of transactions) {
+          if (trans.toUserID === userID) {
+            newPayments.push({
+              description: `${trans.fromUserID} -> ${trans.toUserID}`,
+              value: Math.abs(trans.amount),
+              creatorID: trans.fromUserID,
+              usersID: [trans.toUserID],
+              time: admin.firestore.Timestamp.now(),
+              isDelete: false,
+              isHidden: true,
+            });
+          }
+        }
+      } else {
+        for (const trans of transactions) {
+          if (trans.fromUserID === userID) {
+            newPayments.push({
+              description: `${trans.fromUserID} -> ${trans.toUserID}`,
+              value: Math.abs(trans.amount),
+              creatorID: trans.fromUserID,
+              usersID: [trans.toUserID],
+              time: admin.firestore.Timestamp.now(),
+              isDelete: false,
+              isHidden: true,
+            });
+          }
         }
       }
-    } else {
-      for (const trans of transactions) {
-        if (trans.fromUserID === userID) {
-          newPayments.push({
-            description: `${trans.fromUserID} -> ${trans.toUserID}`,
-            value: Math.abs(trans.amount),
-            creatorID: trans.fromUserID,
-            usersID: [trans.toUserID],
-            time: admin.firestore.Timestamp.now(),
-            isDelete: false,
-            isHidden: true,
-          });
+    }
+
+    if (newPayments.length > 0) {
+      const payment = await billRef.update({
+        payment: admin.firestore.FieldValue.arrayUnion(...newPayments),
+      });
+    }
+
+    let newAdminID = billData.adminID;
+    if (newAdminID === userID) {
+      if (billData.users.length > 1) {
+        if (billData.users[0].userID !== userID) {
+          newAdminID = billData.users[0].userID;
+        } else {
+          newAdminID = billData.users[1].userID;
         }
+      } else {
+        newAdminID = "";
       }
     }
 
-    const payment = await billRef.update({
-      payment: admin.firestore.FieldValue.arrayUnion(...newPayments),
+    const newUsers = billData.users.filter((user) => user.userID !== userID);
+    await billRef.update({
+      users: newUsers,
+      adminID: newAdminID,
+    });
+
+    await userRef.update({
+      billsID: userData.billsID.filter((bill) => bill !== billID),
     });
 
     return { status: "ok" };

@@ -25,4 +25,6 @@ router.delete(
   endpoint(BillUserController.deleteUser)
 );
 
+router.delete("/", checkIsInBill, endpoint(BillUserController.deleteMe));
+
 export default router;
