@@ -7,6 +7,7 @@ export interface Payment {
   usersID: string[];
   time: Timestamp;
   isDelete: boolean;
+  isHidden: boolean;
 }
 
 export interface PaymentHistory {

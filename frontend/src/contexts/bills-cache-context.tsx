@@ -5,6 +5,7 @@ import { UsersCacheContext } from "./users-cache-context";
 import { PaymentHistoryData } from "../utils/models/bill/payment-data";
 import { UserCacheContext } from "./user-context";
 import DateFormatter from "../utils/other/date-formatter";
+import { useNavigate } from "react-router-dom";
 interface BillsCacheType {
   getUsersInBill: (id: string) => Promise<UserData[]>;
   getCurrencyInBill: (id: string) => Promise<string>;
@@ -50,6 +51,8 @@ const BillsCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
 
   const { setUser } = useContext(UsersCacheContext)!;
   const { getUserID } = useContext(UserCacheContext)!;
+
+  const navigate = useNavigate();
 
   const getCurrencyInBill = async (id: string) => {
     if (currencyInBill[id] || fetchedCurrencyInBill[id]) {
@@ -101,9 +104,13 @@ const BillsCacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
     } else {
       setHistoryInBill((prev) => ({ ...prev, [id]: [] }));
 
-      const data = await BillApi.getBillHistory(id);
+      try {
+        const data = await BillApi.getBillHistory(id);
 
-      setHistoryInBill((prev) => ({ ...prev, [id]: data }));
+        setHistoryInBill((prev) => ({ ...prev, [id]: data }));
+      } catch (e) {
+        navigate("/");
+      }
 
       return historyInBill[id];
     }

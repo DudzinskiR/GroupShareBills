@@ -19,4 +19,10 @@ router.put(
 
 router.get("/", checkIsInBill, endpoint(BillUserController.getUsers));
 
+router.delete(
+  "/:userID",
+  checkIsAdmin,
+  endpoint(BillUserController.deleteUser)
+);
+
 export default router;

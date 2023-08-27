@@ -117,25 +117,32 @@ class BillService {
 
     const balance = balanceHelper.getBalance();
     const transactions = balanceHelper.getTransactions();
+    console.log(
+      "🚀 ~ file: bill.service.ts:120 ~ BillService ~ transactions:",
+      transactions
+    );
 
-    result.balance = balance[userID];
+    if (Math.abs(balance[userID]) > 0.01) result.balance = balance[userID];
 
-    result.balance = balance[userID];
     if (balance[userID] > 0) {
       for (const trans of transactions) {
+        if (Math.abs(trans.amount) < 0.01) continue;
+
         if (trans.toUserID === userID) {
           result.users.push({
             id: trans.fromUserID,
-            balance: Math.abs(trans.amount),
+            balance: parseFloat(Math.abs(trans.amount).toFixed(2)),
           });
         }
       }
     } else if (balance[userID] < 0) {
       for (const trans of transactions) {
+        if (Math.abs(trans.amount) < 0.01) continue;
+
         if (trans.fromUserID === userID) {
           result.users.push({
             id: trans.toUserID,
-            balance: trans.amount,
+            balance: parseFloat(trans.amount.toFixed(2)),
           });
         }
       }

@@ -24,6 +24,14 @@ class BillUserController {
     const data = await BillUserService.getUsers(billID);
     res.status(200).send(data);
   }
+
+  static async deleteUser(req: Request, res: Response) {
+    const billID = req.params.billID;
+    const userID = req.params.userID;
+
+    const data = await BillUserService.deleteUser(billID, userID);
+    res.status(200).send(data);
+  }
 }
 
 export default BillUserController;

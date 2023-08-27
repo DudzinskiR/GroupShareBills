@@ -20,14 +20,16 @@ class BillBalanceHelper {
   }
 
   public getTransactions(): Transaction[] {
-    return this.transactions;
+    return [...this.transactions];
   }
 
   public getBalance() {
-    return this.balance;
+    return { ...this.balance };
   }
 
   private calc() {
+    if (!this.payments) return;
+
     this.calcCosts();
     this.calcSumPayments();
 
@@ -72,7 +74,7 @@ class BillBalanceHelper {
   private calcBalance() {
     for (const user of this.users) {
       this.balance[user.userID] =
-        this.sumPayments[user.userID] - this.costs[user.userID];
+        (this.sumPayments[user.userID] || 0) - this.costs[user.userID];
     }
   }
 
@@ -111,14 +113,15 @@ class BillBalanceHelper {
     left: Participant,
     right: Participant
   ) {
-    participants[participants.length - 1].balance += left.balance;
+    if (Math.abs(left.balance) > 0.01) {
+      participants[participants.length - 1].balance += left.balance;
 
-    transactions.push({
-      fromUserID: left.userID,
-      toUserID: right.userID,
-      amount: left.balance,
-    });
-
+      transactions.push({
+        fromUserID: left.userID,
+        toUserID: right.userID,
+        amount: left.balance,
+      });
+    }
     participants.splice(0, 1);
   }
 
@@ -128,13 +131,15 @@ class BillBalanceHelper {
     left: Participant,
     right: Participant
   ) {
-    participants[0].balance += right.balance;
+    if (Math.abs(right.balance) > 0.01) {
+      participants[0].balance += right.balance;
 
-    transactions.push({
-      fromUserID: left.userID,
-      toUserID: right.userID,
-      amount: right.balance * -1,
-    });
+      transactions.push({
+        fromUserID: left.userID,
+        toUserID: right.userID,
+        amount: right.balance * -1,
+      });
+    }
 
     participants.splice(participants.length - 1, 1);
   }
@@ -145,12 +150,13 @@ class BillBalanceHelper {
     left: Participant,
     right: Participant
   ) {
-    transactions.push({
-      fromUserID: left.userID,
-      toUserID: right.userID,
-      amount: left.balance,
-    });
-
+    if (Math.abs(left.balance) > 0.01) {
+      transactions.push({
+        fromUserID: left.userID,
+        toUserID: right.userID,
+        amount: left.balance,
+      });
+    }
     participants.splice(participants.length - 1, 1);
     participants.splice(0, 1);
   }

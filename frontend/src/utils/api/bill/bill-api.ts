@@ -26,7 +26,9 @@ class BillApi extends Api {
       if (!result) {
         result = [];
       }
-    } catch (e) {}
+    } catch (e) {
+      throw new Error("404");
+    }
 
     return result!;
   }

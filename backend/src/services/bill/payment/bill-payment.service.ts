@@ -58,7 +58,7 @@ class BillPaymentService {
         new Date(pay.time.seconds * 1000)
       );
 
-      if (pay.isDelete) {
+      if (pay.isDelete || pay.isHidden) {
         continue;
       }
 
