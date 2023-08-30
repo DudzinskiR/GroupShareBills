@@ -20,6 +20,8 @@ const UserListPage = () => {
   const [userList, setUserList] = useState<UserData[]>([]);
   const [currency, setCurrency] = useState("");
   const [openID, setOpenID] = useState("");
+  const [clickText, setClickText] = useState("Naciśnij żeby skopiować");
+
   const [userRequestList, setUserRequestList] = useState<string[]>([]);
   const { getUsersInBill, getCurrencyInBill, setUserActive } =
     useContext(BillsCacheContext)!;
@@ -30,6 +32,21 @@ const UserListPage = () => {
   const renderRequestBox = () => {
     return (
       <div className="flex flex-col justify-center items-center gap-3 py-2">
+        <div className="text-2xl">Link z zaproszeniem</div>
+        <div
+          className="border bg-slate-100 p-3 rounded-lg cursor-pointer"
+          onClick={() => {
+            setClickText("Skopiowano");
+            navigator.clipboard.writeText(
+              `${window.location.origin}/invite/${id!}`,
+            );
+          }}
+        >
+          <div>
+            {window.location.origin}/invite/{id!}
+          </div>
+          <div className="text-center mt-2">{clickText}</div>
+        </div>
         {userRequestList.map((item, index) => {
           return (
             <div
